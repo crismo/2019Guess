@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const languageSelector = require("./language");
 const app = express();
 
-const DEFAULT_PORT = 8080;
+const DEFAULT_PORT = 8000;
 
 const MAX = 100;
 const MIN = 1;
@@ -22,41 +22,66 @@ const GAME_CODES = {
     OVER: 2030
 };
 
+const LAN_KEY =  {
+    NOT_STARTED:"NOT_STARTED",
+    WIN:"WIN",
+    LOWER:"LOWER",
+    BIGGER:"BIGGER",
+    OVER:"OVER"
+}
+
 let pickedNumber = null;
-let isOver = false;
+let isOngoing = false;
+
+let uniqueUsers = [];
+let adminpsw = process.env.admin_psw || "local"
+
 
 app.set('port', (process.env.PORT || DEFAULT_PORT));
+
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(languageSelector());
 
 
-app.get("/start", function (req, response) {
-    if (isOver) {
+app.get("/start/:user", function (req, response) {
+    if (!isOngoing) {
         pickedNumber = Math.floor(Math.random() * (MAX - MIN)) + MIN;
-        isOver = false;
+        isOngoing = true;
+        uniqueUsers = [req.params.user];
     }
     response.json({code: HTTP_CODES.OK, min: MIN, max: MAX});
 });
 
-app.post("/guess/:number", (req, res) => {
+app.post("/guess/:user/:number", (req, res) => {
 
-    let responseObj = {code: GAME_CODES.ERROR, msg: req.language(NOT_STARTED)};
+
+    let user = req.params.user
+    if(uniqueUsers.indexOf(user) > -1){
+        uniqueUsers.push(user);
+    }
+
+    let responseObj = {code: GAME_CODES.ERROR, msg: req.language(LAN_KEY.NOT_STARTED)};
+  
     if (pickedNumber) {
-        if (!isOver) {
+        if (isOngoing) {
             let guess = parseInt(req.params.number);
 
             if (guess === pickedNumber) {
-                isOver = true;
-                responseObj = {code: GAME_CODES.WIN, msg: req.language.WIN};
+                isOngoing = false;
+                responseObj = {code: GAME_CODES.WIN, msg: req.language(LAN_KEY.WIN)};
             } else if (guess < pickedNumber) {
-                responseObj = {code: GAME_CODES.LOWER, msg: req.language.LOWER};
+                responseObj = {code: GAME_CODES.LOWER, msg: req.language(LAN_KEY.LOWER)};
             } else {
-                responseObj = {code: GAME_CODES.BIGGER, msg: req.language.BIGGER};
+                responseObj = {code: GAME_CODES.BIGGER, msg: req.language(LAN_KEY.BIGGER)};
             }
         } else {
-            responseObj = {code: GAME_CODES.OVER, msg: req.language.OVER};
+            responseObj = {code: GAME_CODES.OVER, msg: req.language(LAN_KEY.OVER)};
         }
+
+        responseObj.users = uniqueUsers.length;
+
         res.json(responseObj);
     } else {
         res.status(HTTP_CODES.NOT_FOUND).json(responseObj);

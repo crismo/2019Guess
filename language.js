@@ -38,14 +38,32 @@ module.exports = function() {
       BIGGER: "!الرقم اصغر, حاول مره ثانيه",
       OVER: ".انتهت اللعبه, للاسف"
     },
+
+      de: {
+      NOT_STARTED: "Das Spiel hat noch nicht begonnen. Gehe zu /start",
+      WIN:"Richtig geraten! Das Spiel ist beendet.",
+      LOWER:"Die Zahl ist grösser, versuche noch einmal!",
+      BIGGER:"Die Zahl ist kleiner, versuche noch einmal",
+      OVER:"Das Spiel ist schon beendet."
+    },
+
     bg: {
       NOT_STARTED: "Играта не е започнала. Отиди до /start",
       WIN: "Ти позна правилния отговор! Край на играта.",
       LOWER: "Числото е по-голямо, опитай пак!",
       BIGGER: "Числото е по-малко, опитай пак!",
       OVER: "Играта вече приключи, жалко."
-    }    
-  };
+    },
+    sa:{
+      NOT_STARTED:"Speallu ii leat álgán. Mana /start.",
+      WIN: "Don leat árvidan riekta! Speallu lea geargan.",
+      LOWER:"Du lohku lea stoarrát, geahčal oktii vel!",
+      BIGGER:"Du lohku lea unnit, geahčal oktii vel!",
+      OVER:"Speallu lea geargan!"
+    }
+
+
+};
 
   return function getClientLang(req, res, next) {
     let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
