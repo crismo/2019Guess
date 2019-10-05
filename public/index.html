@@ -5,12 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <script src= "../game.js"></script>
+    <script src = "../language.js"></script>
 </head>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        color:blue;
+    }
+
+    html{
+        background-image: linear-gradient(lightblue,rgb(128, 240, 171));
+    }
+
+    html, body{
+        height: 100%;
+    }
+
+    header{
+        height: 13vh;
+        width: 100%;
+        background-color:lightblue;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+
+    }
+
+    body{
+        height: 100%;
+        width: 100%;
+    }
+
+    #container{
+        display:grid;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        grid-template-areas:"user"
+                            "btn"
+                            "response";
+    }
+
+    #container>div{
+        margin: 50px;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .userClass{
+        grid-area: user;
+    }
+
+    .buttonClass{
+        grid-area: btn;
+    }
+
+    .responseClass{
+        grid-area: resp;
+    }
+
+    #userName, #guess{
+        text-align: left;
+        font-size: 25px;
+        color: rgb(0, 183, 255);
+        border:0px;
+    }
+
+    #userLabel, #guessLabel{
+        font-size: 25px;
+    }
+
+    #btn{
+        text-align: center;
+        font-size: 25px;
+        height: 50px;
+        width: 100px;
+        margin: 20px 0 10px 0;
+        background-color:rgb(0, 183, 255);
+        border: 3px solid blue;
+        border-radius: 10px;
+    }
+
+    #btn:hover{
+        background-color: aqua;
+    }
+
+</style>
+
 <body>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <header>
+        <h1>GUESS MY NUMBER!</h1>
+    </header>
+
+    <div id="container">
+        <div class="userClass">
+            <label id="userLabel" for="userName">User name:</label>
+            <input id="userName" type="text">
+            <br><br>
+            <label id="guessLabel" for="guess">Your guess:</label>
+            <input id="guess" type="number">
+        </div>
+        <div class="buttonClass">
+            <button id="btn">Guess</button>
+        </div>
+        <div class="responseClass">
+            <h3 id="message"></h3>
+        </div>
+    </div>
+    
+</body>
 
     <script>
     
@@ -18,13 +128,15 @@
             // Remember this function needs to do something.
         }
         const nameInput = document.getElementById("userName");
+        let guess = document.getElementById("guess");
+        let msg = document.getElementById("msg");
 
         if(nameInput){
             const name = nameInput.value
             if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
+                fetch(`/start/${name}`).then(res =>{
+                if(res.ok){
+                    res.body.json()
                 }}).then(json => {
 
                 });
@@ -36,5 +148,5 @@
     
     </script>
 
-</body>
+
 </html>
