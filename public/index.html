@@ -35,11 +35,12 @@
 
     let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
 
+    // Event handlers ---------------------------------------------------------------
     btn.addEventListener('click', function() {
         if(btn.innerHTML == "Go!") {
             startGame();
         } else {
-            guess();
+            guessNumber();
         }
     });
 
@@ -51,10 +52,11 @@
 
     guess.addEventListener('keydown', function() {
         if(event.keyCode == 13) {
-            guess();
+            guessNumber();
         }
     })
 
+    // Functions -------------------------------------------------------------------
     async function startGame() {
         // Check validity of username
         if (validName(uname.value)) {
@@ -74,7 +76,7 @@
         }
     }
 
-    async function guess() {
+    async function guessNumber() {
         // Check whether they got the right number
         if (guess.value) {
             let resp = await fetch(`/guess/${uname.value}/${guess.value}`, { method: "POST" });
