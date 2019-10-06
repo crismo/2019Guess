@@ -96,8 +96,8 @@
         const response = await fetch(`https://fierce-scrubland-78271.herokuapp.com/start/${name}`);
         const json = await response.json();
         boundsTxt.innerHTML = `Number between ${json.min} and ${json.max}.`
-        guessInp.setAttribute(min, json.min);
-        guessInp.setAttribute(max, json.max);
+        //guessInp.setAttribute(min, json.min);
+        //guessInp.setAttribute(max, json.max);
         gameStarted = true;
     }
 
