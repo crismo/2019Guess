@@ -59,7 +59,9 @@
                 if(resp.ok) {
                     let data = await resp.json();
                     console.log(data);
-                    // if(data.)
+                    if(data.code == 2000 || data.code == 2030) {
+                        mainDiv.innerHTML = "Refresh the page to play again.";
+                    }
                     hint.innerHTML = data.msg;
                 }
             }
