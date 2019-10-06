@@ -1,0 +1,31 @@
+body {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color:cornflowerblue;
+    height: 100vh;
+    width: 100vw;
+}
+
+div {
+    text-align: center;
+}
+
+#mainDiv {
+    background-color:cornsilk;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+h1 {
+    color: cornsilk;
+    margin: 2px;
+}
+
+#guess {
+    display: none;
+}
+
+.error {
+    border: 1px solid red;
+}

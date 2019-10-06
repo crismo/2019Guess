@@ -6,35 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <link href="stylesheet.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 
-    <input id="uname" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <div>
+        <h1>Guess my number!</h1>
+        <div id="mainDiv">
+            <div id="unameBox">Username: <input type="text" id="uname"></div>
+            <input type="number" id="guess">
+            <button id="btn">Go!</button>
+        </div>
+        <h1 id="hint"></h1>
+    </div>
 
 </body>
 <script>
 
+    let mainDiv = document.getElementById('mainDiv');
+    let unameBox = document.getElementById('unameBox');
     let uname = document.getElementById('uname');
     let guess = document.getElementById('guess');
+    let btn = document.getElementById('btn');
+    let hint = document.getElementById('hint');
 
-    if (uname && uname.value.length > 0) {
-        fetch(`/start/${uname.value}`).then(
-            function (response) {
-                if (response.status != 200) {
-                    console.log(`Status: ${response.status}`);
-                } else {
-                    response.json().then(function (data) {
-                        console.log(data);
-                    });
-                }
+    let playing = false;
+
+    console.log(uname.value.length);
+
+    btn.addEventListener('click', function () {
+        if (!playing) {
+            // Check validity of username
+            if (validName(uname.value)) {
+
+                // Start the game -- the html part
+                unameBox.innerHTML = `Hello ${uname.value}, the number is between ? and ?`;
+                guess.style.display = "inline-block";
+                btn.innerHTML = "Guess!";
+                playing = true;
+
+                // Start the game -- server part
+                fetch(`/start/${uname.value}`).then(
+                    function(resp) {
+                        console.log("yay");
+                    }
+                );
+            } else {
+                uname.classList.add("error");
             }
-        ).catch(function (err) {
-            console.log(`Fetch error: ${err}`);
-        });
+        } else {
+            // Check whether they got the right number
+        }
+
+    });
+
+    function validName(name) {
+        if (name.length == 0 || name.includes("/") || name.includes(" ")) {
+            return false;
+        }
+        return true;
     }
+
+    // if (uname && uname.value.length > 0) {
+    //     fetch(`/start/${uname.value}`).then(
+    //         function (response) {
+    //             if (response.status != 200) {
+    //                 console.log(`Status: ${response.status}`);
+    //             } else {
+    //                 response.json().then(function (data) {
+    //                     console.log(data);
+    //                 });
+    //             }
+    //         }
+    //     ).catch(function (err) {
+    //         console.log(`Fetch error: ${err}`);
+    //     });
+    // }
 
     // if(uname){
     //     let name = uname.value;
@@ -48,9 +96,9 @@
     //     }
     // }
 
-    function language(KEY) {
-        // Remember this function needs to do something.
-    }
+    // function language(KEY) {
+    //     // Remember this function needs to do something.
+    // }
 
 
 
