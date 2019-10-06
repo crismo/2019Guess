@@ -79,7 +79,7 @@
     }
 
     async function gameGuessFetch(name, guess) {
-        let response = await fetch(`/guess/${name.value}/${guess.value}`, { method: "POST" });
+        let response = await fetch(`/guess/${name}/${guess}`, { method: "POST" });
         if (response.ok) {
             let json = await response.json();
             outputTxt.innerHTML = json.msg;
