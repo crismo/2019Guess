@@ -36,7 +36,9 @@
     let playing = false;
     let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
 
-    btn.addEventListener('click', async function () {
+    btn.addEventListener('click', goGuess());
+
+    async function goGuess() {
         if (!playing) {
             // Check validity of username
             if (validName(uname.value)) {
@@ -74,8 +76,7 @@
                 }
             }
         }
-
-    });
+    }
 
     function validName(name) {
         if (name.length == 0) {
