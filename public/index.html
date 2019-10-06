@@ -49,31 +49,18 @@
                     let data = await resp.json();
                     unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
                 }
-                // fetch(`/start/${uname.value}`).then(
-                //     function (resp) {
-                //         if (resp.ok) {
-                //             resp.json().then(function (data) {
-                //                 unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
-                //             });
-                //         }
-                //     }
-                // );
             } else {
                 uname.classList.add("error");
             }
         } else {
             // Check whether they got the right number
-            // if (guess.value) {
-            //     fetch(`/guess/${uname.value}/${guess.value}`).then(
-            //         function (resp) {
-            //             if(resp.ok) {
-            //                 resp.json().then(function (data) {
-            //                     console.log(data);
-            //                 });
-            //             }
-            //         }
-            //     )
-            // }
+            if(guess.value) {
+                let resp = await fetch(`/guess/${uname.value}/${guess.value}`);
+                if(resp.ok) {
+                    let data = await resp.json();
+                    console.log(data);
+                }
+            }
         }
 
     });
