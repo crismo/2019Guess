@@ -11,13 +11,18 @@ div {
     text-align: center;
 }
 
+button {
+    width: 50px;
+    margin-top: 10px;
+}
+
 #mainDiv {
     background-color:cornsilk;
     border-radius: 10px;
     padding: 20px;
 }
 
-h1, h5 {
+h1, h4 {
     color: cornsilk;
     margin: 2px;
 }

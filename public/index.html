@@ -18,7 +18,7 @@
             <input type="number" id="guess">
             <button id="btn">Go!</button>
         </div>
-        <h5 id="hint"></h5>
+        <h4 id="hint"></h4>
     </div>
 
 </body>
@@ -58,6 +58,8 @@
                 let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
                 if(resp.ok) {
                     let data = await resp.json();
+                    console.log(data);
+                    // if(data.)
                     hint.innerHTML = data.msg;
                 }
             }
