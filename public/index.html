@@ -12,6 +12,7 @@
 <body>
 
     <div>
+        <h3 id="users"></h3>
         <h1>Guess my number!</h1>
         <div id="mainDiv">
             <div id="unameBox">Username: <input type="text" id="uname"></div>
@@ -30,6 +31,7 @@
     let guess = document.getElementById('guess');
     let btn = document.getElementById('btn');
     let hint = document.getElementById('hint');
+    let users = document.getElementById('users');
 
     let playing = false;
     let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
@@ -59,11 +61,16 @@
                 let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
                 if(resp.ok) {
                     let data = await resp.json();
-                    console.log(data);
                     if(data.code == 2000 || data.code == 2030) {
                         mainDiv.innerHTML = "Refresh the page to play again.";
                     }
                     hint.innerHTML = data.msg;
+                    if(data.users == 1) {
+                        users.innerHTML = `1 player`;
+                    } else {
+                        users.innerHTML = `${data.users} players`;
+                    }
+                    
                 }
             }
         }
