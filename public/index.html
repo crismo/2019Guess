@@ -33,46 +33,64 @@
     let hint = document.getElementById('hint');
     let users = document.getElementById('users');
 
-    let playing = false;
     let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
 
-    btn.addEventListener('click', goGuess);
+    btn.addEventListener('click', function() {
+        if(btn.innerHTML == "Go!") {
+            startGame();
+        } else {
+            guess();
+        }
+    });
 
-    async function goGuess() {
-        if (!playing) {
-            // Check validity of username
-            if (validName(uname.value)) {
+    uname.addEventListener('keydown', function() {
+        if(event.keyCode == 13) {
+            startGame();
+        }
+    });
 
-                // Start the game -- the html part
-                guess.style.display = "inline-block";
-                btn.innerHTML = "Guess!";
-                playing = true;
+    guess.addEventListener('keydown', function() {
+        if(event.keyCode == 13) {
+            guess();
+        }
+    })
 
-                // Start the game -- server part
-                let resp = await fetch(`/start/${uname.value}`);
-                if(resp.ok) {
-                    let data = await resp.json();
-                    unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
-                }
-            } else {
-                uname.classList.add("error");
+    async function startGame() {
+        // Check validity of username
+        if (validName(uname.value)) {
+
+            // Change the UI
+            guess.style.display = "inline-block";
+            btn.innerHTML = "Guess!";
+
+            // Start the game & get the bounds from the server
+            let resp = await fetch(`/start/${uname.value}`);
+            if (resp.ok) {
+                let data = await resp.json();
+                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
             }
         } else {
-            // Check whether they got the right number
-            if(guess.value) {
-                let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
-                if(resp.ok) {
-                    let data = await resp.json();
-                    if(data.code == 2000 || data.code == 2030) {
-                        mainDiv.innerHTML = "Refresh the page to play again.";
-                    }
-                    hint.innerHTML = data.msg;
-                    if(data.users == 1) {
-                        users.innerHTML = `1 player`;
-                    } else {
-                        users.innerHTML = `${data.users} players`;
-                    }
-                    
+            alert(`This is not a valid username. Your username cannot contain any of the following characters: ${badChars}`)
+        }
+    }
+
+    async function guess() {
+        // Check whether they got the right number
+        if (guess.value) {
+            let resp = await fetch(`/guess/${uname.value}/${guess.value}`, { method: "POST" });
+            if (resp.ok) {
+
+                let data = await resp.json();
+                if (data.code == 2000 || data.code == 2030) { // game over codes (this or another client won)
+                    mainDiv.innerHTML = "Refresh the page to play again.";
+                }
+                hint.innerHTML = data.msg;
+
+                // Update the number of players
+                if (data.users == 1) {
+                    users.innerHTML = `1 player`;
+                } else {
+                    users.innerHTML = `${data.users} players`;
                 }
             }
         }
@@ -81,9 +99,9 @@
     function validName(name) {
         if (name.length == 0) {
             return false;
-        } 
-        for(char of badChars) {
-            if(name.includes(char)) {
+        }
+        for (char of badChars) {
+            if (name.includes(char)) {
                 return false;
             }
         }

@@ -36,7 +36,3 @@ h1, h3, h4 {
 #guess {
     display: none;
 }
-
-.error {
-    border: 1px solid red;
-}
