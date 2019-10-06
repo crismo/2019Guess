@@ -58,18 +58,14 @@
 
     // Functions -------------------------------------------------------------------
     async function startGame() {
-        // Check validity of username
         if (validName(uname.value)) {
-
-            // Change the UI
-            guess.style.display = "inline-block";
-            btn.innerHTML = "Guess!";
-
-            // Start the game & get the bounds from the server
             let resp = await fetch(`/start/${uname.value}`);
             if (resp.ok) {
                 let data = await resp.json();
                 unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
+
+                guess.style.display = "inline-block";
+                btn.innerHTML = "Guess!";
             }
         } else {
             alert(`This is not a valid username. Your username cannot contain any of the following characters: ${badChars}`)
@@ -77,7 +73,6 @@
     }
 
     async function guessNumber() {
-        // Check whether they got the right number
         if (guess.value) {
             let resp = await fetch(`/guess/${uname.value}/${guess.value}`, { method: "POST" });
             if (resp.ok) {
