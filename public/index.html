@@ -59,6 +59,7 @@
                 let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
                 if(resp.ok) {
                     let data = await resp.json();
+                    console.log(data);
                     if(data.code == 2000 || data.code == 2030) {
                         mainDiv.innerHTML = "Refresh the page to play again.";
                     }
