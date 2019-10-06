@@ -1,40 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Guess my number</title>
-</head>
-<body>
+  </head>
+  <body>
+    <form onsubmit="start(event)" id="start-form" style="visibility: visible;">
+      <input id="userName" type="text" placeholder="username" />
+      <button type="submit">Start</button>
+    </form>
+    <form
+      onsubmit="guess(event)"
+      id="guess-form"
+      style="visibility: hidden;"
+      action=""
+    >
+      <p id="users">Users connected: 1</p>
+      <p id="guess-info">Guess a number between 1 and 100</p>
+      <input id="guess-input" type="number" placeholder="number" />
+      <button type="submit">Guess</button>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+      <p id="guess-msg"></p>
+    </form>
 
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
+      let game = {
+        ongoing: false,
+        min: null,
+        max: null
+      };
+
+      const guessInput = document.getElementById("guess-input");
+      const nameInput = document.getElementById("userName");
+
+      function language(KEY) {
+        // Remember this function needs to do something.
+      }
+      function start(e) {
+        e.preventDefault();
+        if (nameInput.value) {
+          fetch(`/start/${nameInput.value}`)
+            .then(res => res.ok && res.json())
+            .then(res => {
+              game = { min: res.min, max: res.max, ongoing: true, ...game };
+              document.getElementById("start-form").style.visibility = "hidden";
+              document.getElementById("guess-form").style.visibility =
+                "visible";
+              document.getElementById(
+                "guess-info"
+              ).innerHTML = `Guess a number between ${res.min} and ${res.max}`;
+            });
         }
-        const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
+      }
+      function guess(e) {
+        e.preventDefault();
+        if (!!guessInput.value) {
+          fetch(`/guess/${nameInput.value}/${guessInput.value}`, {
+            method: "POST"
+          })
+            .then(res => res.ok && res.json())
+            .then(res => {
+              document.getElementById("guess-msg").innerHTML = res.msg;
+              document.getElementById("users").innerHTML =
+                "Users connected: " + res.users;
+            });
         }
-
-        
-        
-    
+      }
     </script>
-
-</body>
+  </body>
 </html>
