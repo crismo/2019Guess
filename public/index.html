@@ -32,7 +32,6 @@
     let hint = document.getElementById('hint');
 
     let playing = false;
-    let max; let min;
 
     console.log(uname.value.length);
 
@@ -61,6 +60,17 @@
             }
         } else {
             // Check whether they got the right number
+            if (guess.value) {
+                fetch(`/guess/${uname.value}/${guess.value}`).then(
+                    function (resp) {
+                        if(resp.ok) {
+                            resp.json().then(function (data) {
+                                console.log(data);
+                            });
+                        }
+                    }
+                )
+            }
         }
 
     });
