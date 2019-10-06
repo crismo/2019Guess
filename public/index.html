@@ -32,6 +32,7 @@
     let hint = document.getElementById('hint');
 
     let playing = false;
+    let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
 
     btn.addEventListener('click', async function () {
         if (!playing) {
@@ -58,7 +59,6 @@
                 let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
                 if(resp.ok) {
                     let data = await resp.json();
-                    console.log(data);
                     if(data.code == 2000 || data.code == 2030) {
                         mainDiv.innerHTML = "Refresh the page to play again.";
                     }
@@ -70,46 +70,20 @@
     });
 
     function validName(name) {
-        if (name.length == 0 || name.includes("/") || name.includes(" ")) {
+        if (name.length == 0) {
             return false;
+        } 
+        for(char of badChars) {
+            if(name.includes(char)) {
+                return false;
+            }
         }
         return true;
     }
 
-    // if (uname && uname.value.length > 0) {
-    //     fetch(`/start/${uname.value}`).then(
-    //         function (response) {
-    //             if (response.status != 200) {
-    //                 console.log(`Status: ${response.status}`);
-    //             } else {
-    //                 response.json().then(function (data) {
-    //                     console.log(data);
-    //                 });
-    //             }
-    //         }
-    //     ).catch(function (err) {
-    //         console.log(`Fetch error: ${err}`);
-    //     });
-    // }
-
-    // if (uname) {
-    //     let name = uname.value;
-    //     if (name.length > 0) {
-    //         fetch(`/start/${name}`).then(resp => {
-    //             if (resp.ok) {
-    //                 resp.body.json()
-    //             }
-    //         }).then(json => {
-
-    //         });
-    //     }
-    // }
-
     // function language(KEY) {
     //     // Remember this function needs to do something.
     // }
-
-
 
 </script>
 
