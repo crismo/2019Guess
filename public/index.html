@@ -81,9 +81,9 @@
     async function gameGuessFetch(name, guess) {
         let response = await fetch(`/guess/${name}/${guess}`, { method: "POST" });
         if (response.ok) {
-            let json = await response.json();
-            outputTxt.innerHTML = json.msg;
-            if (json.code == 2000 || json.code == 2030) {   // codes for game over or win
+            let data = await response.json();
+            outputTxt.innerHTML = data.msg;
+            if (data.code == 2000 || data.code == 2030) {   // codes for game over or win
                 gameStarted = false;
             }
         }
