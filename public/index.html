@@ -51,6 +51,7 @@
                     function (resp) {
                         if (resp.ok) {
                             resp.json().then(function (data) {
+                                console.log(data, data.max, data.min);
                                 max = data.max;
                                 min = data.min;
                             });
