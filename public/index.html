@@ -50,7 +50,9 @@
                 fetch(`/start/${uname.value}`).then(
                     function (resp) {
                         if (resp.ok) {
-                            console.log(resp.body);
+                            response.json().then(function (data) {
+                                console.log(data);
+                            });
                         }
                     }
                 );
