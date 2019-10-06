@@ -36,10 +36,6 @@
 
     changeUI();
 
-    function language(KEY) {
-        // Remember this function needs to do something.
-    }
-
     function changeUI() {
         if (gameStarted) {
             guessBtn.innerHTML = "guess";
@@ -66,27 +62,8 @@
             if (!gameStarted) {
                 gameStarted = true;
                 gameStartFetch(name);
-
-                /*fetch(`/start/${name}`).then(resp => {
-                    if (resp.ok) {
-                        resp.body.json();
-                    }
-                }).then(json => {
-                    boundsTxt.innerHTML = `Number between ${json.min} and ${json.min}.`
-                    guessInp.setAttribute(min, json.min);
-                    guessInp.setAttribute(max, json.min);
-                });
-                */
             } else {
                 gameGuessFetch(name, guess);
-
-                /*fetch(`/guess/${name}/${guess}`).then(resp => {
-                    if (resp.ok) {
-                        resp.body.json();
-                    }
-                }).then(json => {
-                    outputTxt.innerHTML = json.msg;
-                });*/
             }
         } else {
             alert("Pick a valid user name!");
@@ -95,14 +72,14 @@
 
     async function gameStartFetch(name) {
         changeUI();
-        let response = await fetch(`https://fierce-scrubland-78271.herokuapp.com/start/${name}`);
+        let response = await fetch(`/start/${name}`);
         let json = await response.json();
         boundsTxt.innerHTML = `Number between ${json.min} and ${json.max}.`
         gameStarted = true;
     }
 
     async function gameGuessFetch(name, guess) {
-        let response = await fetch(`https://fierce-scrubland-78271.herokuapp.com/guess/${name}/${guess}`, { method: "POST" });
+        let response = await fetch(`/guess/${name}/${guess}`, { method: "POST" });
         if (response.ok) {
             let json = await response.json();
             outputTxt.innerHTML = json.msg;
