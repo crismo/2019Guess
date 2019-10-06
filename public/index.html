@@ -55,7 +55,7 @@
         } else {
             // Check whether they got the right number
             if(guess.value) {
-                let resp = await fetch(`/guess/${uname.value}/${guess.value}`);
+                let resp = await fetch(`/guess/${uname.value}/${guess.value}`, {method:"POST"});
                 if(resp.ok) {
                     let data = await resp.json();
                     console.log(data);
