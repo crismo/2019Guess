@@ -33,9 +33,7 @@
 
     let playing = false;
 
-    console.log(uname.value.length);
-
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', async function () {
         if (!playing) {
             // Check validity of username
             if (validName(uname.value)) {
@@ -46,31 +44,36 @@
                 playing = true;
 
                 // Start the game -- server part
-                fetch(`/start/${uname.value}`).then(
-                    function (resp) {
-                        if (resp.ok) {
-                            resp.json().then(function (data) {
-                                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
-                            });
-                        }
-                    }
-                );
+                let resp = await fetch(`/start/${uname.value}`);
+                if(resp.ok) {
+                    let data = await resp.json();
+                    unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
+                }
+                // fetch(`/start/${uname.value}`).then(
+                //     function (resp) {
+                //         if (resp.ok) {
+                //             resp.json().then(function (data) {
+                //                 unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
+                //             });
+                //         }
+                //     }
+                // );
             } else {
                 uname.classList.add("error");
             }
         } else {
             // Check whether they got the right number
-            if (guess.value) {
-                fetch(`/guess/${uname.value}/${guess.value}`).then(
-                    function (resp) {
-                        if(resp.ok) {
-                            resp.json().then(function (data) {
-                                console.log(data);
-                            });
-                        }
-                    }
-                )
-            }
+            // if (guess.value) {
+            //     fetch(`/guess/${uname.value}/${guess.value}`).then(
+            //         function (resp) {
+            //             if(resp.ok) {
+            //                 resp.json().then(function (data) {
+            //                     console.log(data);
+            //                 });
+            //             }
+            //         }
+            //     )
+            // }
         }
 
     });
