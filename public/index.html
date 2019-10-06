@@ -48,8 +48,10 @@
 
                 // Start the game -- server part
                 fetch(`/start/${uname.value}`).then(
-                    function(resp) {
-                        console.log(resp);
+                    function (resp) {
+                        if (resp.ok) {
+                            console.log(resp.body.json());
+                        }
                     }
                 );
             } else {
@@ -84,13 +86,14 @@
     //     });
     // }
 
-    // if(uname){
+    // if (uname) {
     //     let name = uname.value;
-    //     if(name.length > 0){
-    //         fetch(`/start/${name}`).then(resp =>{
-    //         if(resp.ok){
-    //             resp.body.json()
-    //         }}).then(json => {
+    //     if (name.length > 0) {
+    //         fetch(`/start/${name}`).then(resp => {
+    //             if (resp.ok) {
+    //                 resp.body.json()
+    //             }
+    //         }).then(json => {
 
     //         });
     //     }
