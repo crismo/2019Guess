@@ -68,8 +68,8 @@ module.exports = function() {
   return function getClientLang(req, res, next) {
     let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
 
-    language = language.split(",")[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
-    console.log(language);
+    language = language.split(",")[0].split(";")[0].split("-")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
+    language = language.includes('-') ? language.split('-')[0] : language;
 
     let languages = Object.keys(TEXTS); // ["en","no"]
     if (!languages.indexOf(language)) {
