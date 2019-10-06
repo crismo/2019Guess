@@ -51,15 +51,14 @@
                     function (resp) {
                         if (resp.ok) {
                             resp.json().then(function (data) {
-                                console.log(data, data.max, data.min);
-                                max = data.max;
-                                min = data.min;
+                                max = JSON.parse(data.max);
+                                min = JSON.parse(data.min);
                             });
                         }
                     }
                 );
 
-                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${max} and ${min}`;
+                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${min} and ${max}`;
             } else {
                 uname.classList.add("error");
             }
