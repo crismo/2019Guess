@@ -73,8 +73,8 @@
     async function gameStartFetch(name) {
         changeUI();
         let response = await fetch(`/start/${name}`);
-        let json = await response.json();
-        boundsTxt.innerHTML = `Number between ${json.min} and ${json.max}.`
+        let data = await response.json();
+        boundsTxt.innerHTML = `Number between ${data.min} and ${data.max}.`
         gameStarted = true;
     }
 
@@ -82,10 +82,10 @@
         let response = await fetch(`/guess/${name}/${guess}`, { method: "POST" });
         if (response.ok) {
             let data = await response.json();
-            outputTxt.innerHTML = data.msg;
-            if (data.code == 2000 || data.code == 2030) {   // codes for game over or win
+            if (data.code == 2000 || data.code == 2030) {   // codes for 'game over' or 'win'
                 gameStarted = false;
             }
+            outputTxt.innerHTML = data.msg;
         }
     }
 </script>
