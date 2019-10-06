@@ -32,6 +32,7 @@
     let hint = document.getElementById('hint');
 
     let playing = false;
+    let max; let min;
 
     console.log(uname.value.length);
 
@@ -41,7 +42,6 @@
             if (validName(uname.value)) {
 
                 // Start the game -- the html part
-                unameBox.innerHTML = `Hello ${uname.value}, the number is between ? and ?`;
                 guess.style.display = "inline-block";
                 btn.innerHTML = "Guess!";
                 playing = true;
@@ -51,11 +51,14 @@
                     function (resp) {
                         if (resp.ok) {
                             resp.json().then(function (data) {
-                                console.log(data);
+                                max = data.max;
+                                min = data.min;
                             });
                         }
                     }
                 );
+
+                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${max} and ${min}`;
             } else {
                 uname.classList.add("error");
             }
