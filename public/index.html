@@ -1,40 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
 </head>
+
 <body>
-
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
-
-    <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
-        }
-
-        
-        
-    
-    </script>
-
+    <div>
+        <h2>Guess the number</h2>
+        <p id="boundsTxt"></p>
+        <label for="userName" id="userNameLabel">User name</label>
+        <input id="userName" type="text">
+        <br>
+        <label for="guessInp" id="guessInpLabel" style="visibility: hidden">Your guess</label>
+        <input id="guessInp" type="number" min="" max="" style="visibility: hidden">
+        <br><br>
+        <button id="guessBtn"></button>
+        <p id="outputTxt"></p>
+    </div>
 </body>
+<script>
+    let boundsTxt = document.getElementById('boundsTxt');
+    let userNameLabel = document.getElementById('userNameLabel');
+    const userName = document.getElementById('userName');
+    let guessInpLabel = document.getElementById('guessInpLabel');
+    let guessInp = document.getElementById('guessInp');
+    let guessBtn = document.getElementById('guessBtn');
+    let outputTxt = document.getElementById('outputTxt');
+
+    let gameStarted = false;
+    let nameFilledIn = false;
+
+    changeUI();
+
+    function changeUI() {
+        if (gameStarted) {
+            guessBtn.innerHTML = "guess";
+            guessInpLabel.style.visibility = "visible";
+            guessInp.style.visibility = "visible";
+        } else {
+            guessBtn.innerHTML = "start";
+            guessInpLabel.style.visibility = "hidden";
+            guessInp.style.visibility = "hidden";
+        }
+    }
+
+    guessBtn.addEventListener('click', function (evt) {
+        const name = userName.value;
+        if (name.length > 0) {
+            if (!nameFilledIn) {
+                userName.parentNode.removeChild(userName);
+                userNameLabel.innerHTML = name;
+                nameFilledIn = true;
+            }
+
+            let guess = guessInp.value;
+
+            if (!gameStarted) {
+                gameStarted = true;
+                gameStartFetch(name);
+            } else {
+                gameGuessFetch(name, guess);
+            }
+        } else {
+            alert("Pick a valid user name!");
+        }
+    });
+
+    async function gameStartFetch(name) {
+        changeUI();
+        let response = await fetch(`/start/${name}`);
+        let data = await response.json();
+        boundsTxt.innerHTML = `Number between ${data.min} and ${data.max}.`
+        gameStarted = true;
+    }
+
+    async function gameGuessFetch(name, guess) {
+        let response = await fetch(`/guess/${name}/${guess}`, { method: "POST" });
+        if (response.ok) {
+            let data = await response.json();
+            if (data.code == 2000 || data.code == 2030) {   // codes for 'game over' or 'win'
+                gameStarted = false;
+            }
+            outputTxt.innerHTML = data.msg;
+        }
+    }
+</script>
+<style>
+    * {
+        font-family: sans-serif;
+    }
+
+    div {
+        background-color: aquamarine;
+        border: 1px solid black;
+        padding: 10px;
+        width: 50%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    button {
+        background-color: pink;
+        border: 1px solid black;
+    }
+</style>
+
 </html>
