@@ -5,35 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <style>
+        
+        body {
+            font-family: Helvetica, sans-serif;
+        }
+
+        button {
+            border: 1px;
+            border-radius: 15px;
+            background-color: #2f71e3;
+            color: white;
+            font-size: small;
+        }
+
+        button:hover{
+            color: black;
+        }
+
+        .cont {
+            background-color: #fafafa;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
+            padding: 50px;
+        }
+
+    </style>
 </head>
 <body>
+    <div class="cont">
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+        <h1>Guess my number</h1>
+
+        <label for="userName">Enter a username</label>
+        <input id="userName" type="text">
+        <button id="btnSubmit">Submit</button>
+
+        <br><br>
+
+        <label id="guessLabel" for="guess" style="visibility:hidden">Your guess</label> 
+        <input id="guess" type="number" style="visibility:hidden">
+        <button id="btnGuess" style="visibility:hidden">Guess</button>
+        
+        <br><br>
+
+        <h3 id="txtOut" style="visibility:hidden">Server output</h3>
+
+    </div>
 
     <script>
-    
+
         function language(KEY){
             // Remember this function needs to do something.
         }
+
         const nameInput = document.getElementById("userName");
+        const btnSubmit = document.getElementById("btnSubmit");
+        
+        const guessLabel = document.getElementById("guessLabel");
+        const guessInput = document.getElementById("guess");
+        const btnGuess = document.getElementById("btnGuess");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+        const txtOut = document.getElementById("txtOut");
 
+        let name; 
+        let guess;
+        
+        btnSubmit.addEventListener('click', function(evt){
+            if(nameInput){
+                name = nameInput.value
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+                if(name.length > 0){
+                    fetch(`/start/${name}`, options).then(resp =>{
+                        if(resp.ok){
+                            return resp.json();
+                        }
+                    }).then(json => {
+                        guessLabel.style.visibility = "visible";
+                        guessInput.style.visibility = "visible";
+                        btnGuess.style.visibility = "visible";
+                        txtOut.style.visibility = "visible";
+                        txtOut.textContent = `Guess a number between ${json.min} and ${json.max}`;
+                    }).catch(error =>{
+                        console.error(error);
+                    })
+                }
+            } 
+        })
+
+        btnGuess.addEventListener('click', function(evt){
+            if(guessInput){
+                guess = guessInput.value;
+                const gOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+                fetch(`/guess/${name}/${guess}`, gOptions).then(resp =>{
+                    if(resp.ok){
+                        return resp.json();
+                    }
+                }).then(json => {
+                    txtOut.textContent = json.msg;
                 });
             }
-        }
-
+        });
         
-        
-    
+           
     </script>
 
 </body>

@@ -22,7 +22,7 @@ const GAME_CODES = {
     OVER: 2030
 };
 
-const LAN_KEY =  {
+const LAN_KEY = {
     NOT_STARTED:"NOT_STARTED",
     WIN:"WIN",
     LOWER:"LOWER",
@@ -55,8 +55,6 @@ app.get("/start/:user", function (req, response) {
 });
 
 app.post("/guess/:user/:number", (req, res) => {
-
-
     let user = req.params.user
     if(uniqueUsers.indexOf(user) > -1){
         uniqueUsers.push(user);
@@ -65,6 +63,7 @@ app.post("/guess/:user/:number", (req, res) => {
     let responseObj = {code: GAME_CODES.ERROR, msg: req.language(LAN_KEY.NOT_STARTED)};
   
     if (pickedNumber) {
+        
         if (isOngoing) {
             let guess = parseInt(req.params.number);
 
