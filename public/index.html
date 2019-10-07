@@ -75,28 +75,83 @@
 
   <body>
     <div id="wrapper">
-      <h1>Guess my number</h1>
+      <h1 id="title">Guess my number</h1>
       <p id="hint">
         Enter your Username to join the multiplayer guess my number game.
       </p>
 
-      <form id="userInput">
-        <p id="user">Username: <input id="userName" type="text" /></p>
+      <div id="userInput">
+        <p>
+          <span id="user"> Username: </span><input id="userName" type="text" />
+        </p>
         <button id="start">Start</button>
-      </form>
+      </div>
 
       <p id="bounds"></p>
       <p id="message"></p>
       <p id="users"></p>
 
-      <form id="guessInput">
-        <p>Your Guess: <input id="number" type="number" /></p>
+      <div id="guessInput">
+        <p>
+          <span id="yourGuess">Your Guess:</span>
+          <input id="number" type="number" />
+        </p>
         <button id="guess">Guess</button>
-      </form>
+      </div>
 
       <button id="restart">Restart Game</button>
     </div>
     <script>
+      const USER_LANG = navigator.language.substring(0, 2);
+      const DEFAULT_LANGUAGE = "en";
+      const LAN_KEY = {
+        TITLE: "TITLE",
+        BOUNDS: "BOUNDS",
+        HELLO: "HELLO",
+        PLAYERS: "PLAYERS",
+        PICK: "PICK",
+        USERNAME: "USERNAME",
+        RETRY: "RETRY",
+        HINT: "HINT",
+        START: "START",
+        GUESS: "GUESS",
+        YOUR_GUESS: "YOUR_GUESS"
+      };
+      const TEXTS = {
+        en: {
+          TITLE: "Guess my number",
+          BOUNDS: "Guess a number between the two bounds: ",
+          HELLO: "Hello",
+          PLAYERS: "Number of players: ",
+          PICK: "Pick a username!",
+          USERNAME: "Username: ",
+          RETRY: "Retry, your number must be between those bounds. ",
+          HINT:
+            "Enter your Username to join the multiplayer guess my number game.",
+          START: "Start",
+          GUESS: "Guess",
+          YOUR_GUESS: "Your Guess: "
+        },
+
+        de: {
+          TITLE: "Errate meine Zahl",
+          BOUNDS: "Errate die Zahl zwischen den zwei Grenzen: ",
+          HELLO: "Hallo",
+          PLAYERS: "Anzahl der Spieler: ",
+          PICK: "Wähle einen Benutzernamen!",
+          USERNAME: "Benutzername: ",
+          RETRY:
+            "Versuche es nochmal, die Zahl muss zwischen den zwei Grenzen liegen.",
+          HINT:
+            "Gib einen Benutzernamen ein, um dem Mehrspieler-Spiel 'Errate-meine-Zahl' beizutreten.",
+          START: "Start",
+          GUESS: "Rate",
+          YOUR_GUESS: "Deine Vermutung: "
+        }
+      };
+
+      console.log(language("TITLE"));
+
       let start = document.getElementById("start");
       let guess = document.getElementById("guess");
       let number = document.getElementById("number");
@@ -107,25 +162,46 @@
       let restart = document.getElementById("restart");
       let hint = document.getElementById("hint");
       let users = document.getElementById("users");
+      let user = document.getElementById("user");
+      let title = document.getElementById("title");
+      let yourGuess = document.getElementById("yourGuess");
 
       let min;
       let max;
       let name;
 
+      //initial language setup
+      user.innerHTML = language(LAN_KEY.USERNAME);
+      title.innerHTML = language(LAN_KEY.TITLE);
+      hint.innerHTML = language(LAN_KEY.HINT);
+      start.innerHTML = language(LAN_KEY.START);
+      guess.innerHTML = language(LAN_KEY.GUESS);
+      yourGuess.innerHTML = language(LAN_KEY.YOUR_GUESS);
+
       start.addEventListener("click", function(evt) {
-        evt.preventDefault();
         const nameInput = document.getElementById("userName");
         startGame(nameInput);
       });
 
       guess.addEventListener("click", function(evt) {
-        evt.preventDefault();
         makeGuess(number);
       });
 
       restart.addEventListener("click", function(evt) {
         location.reload(true);
       });
+
+      function language(KEY) {
+        // Remember this function needs to do something.
+        let value = TEXTS[USER_LANG][KEY];
+        if (!value) {
+          value = TEXTS[DEFAULT_LANGUAGE][KEY];
+          console.error(
+            `Person that wrote the ${USER_LANG} made a mistake with key ${KEY}`
+          );
+        }
+        return value;
+      }
 
       async function startGame(nameInput) {
         try {
@@ -139,7 +215,9 @@
                 let data = await result.json();
                 min = data.min;
                 max = data.max;
-                bounds.innerHTML = `Hello ${name}, guess a number between ${min} and ${max}.`;
+                bounds.innerHTML = `${language(
+                  LAN_KEY.HELLO
+                )} ${name}! ${language(LAN_KEY.BOUNDS)} ${min} - ${max}`;
 
                 hint.style.display = "none";
                 userInput.style.display = "none";
@@ -149,7 +227,7 @@
                 number.max = max;
               }
             } else {
-              message.innerHTML = "Pick a username!";
+              message.innerHTML = language(LAN_KEY.PICK);
             }
           }
         } catch (error) {
@@ -179,7 +257,7 @@
               if (result.ok) {
                 let data = await result.json();
                 message.innerHTML = data.msg;
-                users.innerHTML = "Number of players: " + data.users;
+                users.innerHTML = language(LAN_KEY.PLAYERS) + data.users;
 
                 if (data.code == 2000 || data.code == 2030) {
                   restart.style.display = "block";
@@ -188,7 +266,7 @@
                 }
               }
             } else {
-              message.innerHTML = `Retry, your number must be between ${min} and ${max}.`;
+              message.innerHTML = language(LAN_KEY.RETRY);
             }
           }
         } catch (error) {

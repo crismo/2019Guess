@@ -30,6 +30,9 @@ const LAN_KEY =  {
     OVER:"OVER"
 }
 
+const TEXTS = {
+    en: {
+
 let pickedNumber = null;
 let isOngoing = false;
 
