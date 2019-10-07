@@ -1,40 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Guess my number</title>
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+  </head>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+  <body>
+    <div id="wrapper">
+      <h1 id="title">Guess my number</h1>
+      <p id="hint">
+        Enter your Username to join the multiplayer guess my number game.
+      </p>
 
+      <div id="userInput">
+        <p>
+          <span id="user"> Username: </span><input id="userName" type="text" />
+        </p>
+        <button id="start">Start</button>
+      </div>
+
+      <p id="bounds"></p>
+      <p id="message"></p>
+      <p id="users"></p>
+
+      <div id="guessInput">
+        <p>
+          <span id="yourGuess">Your Guess:</span>
+          <input id="number" type="number" />
+        </p>
+        <button id="guess">Guess</button>
+      </div>
+
+      <button id="restart">Restart Game</button>
+    </div>
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
+      let userLang = navigator.language.substring(0, 2);
+      const DEFAULT_LANGUAGE = "en";
+
+      const LAN_KEY = {
+        TITLE: "TITLE",
+        BOUNDS: "BOUNDS",
+        HELLO: "HELLO",
+        PLAYERS: "PLAYERS",
+        PICK: "PICK",
+        USERNAME: "USERNAME",
+        RETRY: "RETRY",
+        HINT: "HINT",
+        START: "START",
+        GUESS: "GUESS",
+        YOUR_GUESS: "YOUR_GUESS",
+        RESTART: "RESTART"
+      };
+      const TEXTS = {
+        en: {
+          TITLE: "Guess my number",
+          BOUNDS: "Guess a number between the two bounds: ",
+          HELLO: "Hello",
+          PLAYERS: "Number of players: ",
+          PICK: "Pick a valid username! (Maximum 10 characters, no numbers)",
+          USERNAME: "Username: ",
+          RETRY: "Retry, your number must be between those bounds. ",
+          HINT:
+            "Enter your username to join the multiplayer guess my number game.",
+          START: "Start",
+          GUESS: "Guess",
+          YOUR_GUESS: "Your Guess: ",
+          RESTART: "Restart Game"
+        },
+
+        de: {
+          TITLE: "Errate meine Zahl",
+          BOUNDS: "Errate die Zahl zwischen den zwei Grenzen: ",
+          HELLO: "Hallo",
+          PLAYERS: "Anzahl der Spieler: ",
+          PICK:
+            "Wähle einen gültigen Benutzernamen! (Maximal 10 Zeichen, keine Zahlen)",
+          USERNAME: "Benutzername: ",
+          RETRY:
+            "Versuche es nochmal, die Zahl muss zwischen den zwei Grenzen liegen.",
+          HINT:
+            "Gib einen Benutzernamen ein, um dem Mehrspieler-Spiel 'Errate-meine-Zahl' beizutreten.",
+          START: "Start",
+          GUESS: "Rate",
+          YOUR_GUESS: "Deine Vermutung: ",
+          RESTART: "Spiel neu starten"
         }
+      };
+
+      let languages = Object.keys(TEXTS); // ["en","no"]
+      if (languages.indexOf(userLang) < 0) {
+        userLang = DEFAULT_LANGUAGE;
+      }
+
+      let start = document.getElementById("start");
+      let guess = document.getElementById("guess");
+      let number = document.getElementById("number");
+      let bounds = document.getElementById("bounds");
+      let userInput = document.getElementById("userInput");
+      let guessInput = document.getElementById("guessInput");
+      let message = document.getElementById("message");
+      let restart = document.getElementById("restart");
+      let hint = document.getElementById("hint");
+      let users = document.getElementById("users");
+      let user = document.getElementById("user");
+      let title = document.getElementById("title");
+      let yourGuess = document.getElementById("yourGuess");
+
+      let min;
+      let max;
+      let name;
+      const WIN = 2000;
+      const OVER = 2030;
+
+      //initial language setup
+      user.innerHTML = language(LAN_KEY.USERNAME);
+      title.innerHTML = language(LAN_KEY.TITLE);
+      hint.innerHTML = language(LAN_KEY.HINT);
+      start.innerHTML = language(LAN_KEY.START);
+      guess.innerHTML = language(LAN_KEY.GUESS);
+      yourGuess.innerHTML = language(LAN_KEY.YOUR_GUESS);
+      restart.innerHTML = language(LAN_KEY.RESTART);
+
+      start.addEventListener("click", function(evt) {
         const nameInput = document.getElementById("userName");
+        startGame(nameInput);
+      });
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+      guess.addEventListener("click", function(evt) {
+        makeGuess(number);
+      });
 
-                });
-            }
+      restart.addEventListener("click", function(evt) {
+        location.reload(true);
+      });
+
+      function language(KEY) {
+        // Remember this function needs to do something.
+        let value = TEXTS[userLang][KEY];
+        if (!value) {
+          value = TEXTS[DEFAULT_LANGUAGE][KEY];
+          console.error(
+            `Person that wrote the ${userLang} made a mistake with key ${KEY}`
+          );
         }
+        return value;
+      }
 
-        
-        
-    
+      async function startGame(nameInput) {
+        try {
+          if (nameInput) {
+            name = nameInput.value;
+            if (isValidUsername(name)) {
+              makeFetch(`/start/${name}`, {}).then(data => {
+                min = data.min;
+                max = data.max;
+                bounds.innerHTML = `${language(
+                  LAN_KEY.HELLO
+                )} ${name}! ${language(LAN_KEY.BOUNDS)} ${min} - ${max}.`;
+
+                hint.style.display = "none";
+                userInput.style.display = "none";
+                guessInput.style.display = "flex";
+                message.innerHTML = "";
+                number.min = min;
+                number.max = max;
+              });
+            } else {
+              message.innerHTML = language(LAN_KEY.PICK);
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async function makeGuess(number) {
+        try {
+          if (number) {
+            const guessedNumber = number.value;
+            if (guessedNumber >= min && guessedNumber <= max) {
+              makeFetch(`/guess/${name}/${guessedNumber}`, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                redirect: "follow",
+                referrer: "no-referrer"
+              }).then(data => {
+                message.innerHTML = data.msg;
+                users.innerHTML = language(LAN_KEY.PLAYERS) + data.users;
+
+                if (data.code == WIN || data.code == OVER) {
+                  restart.style.display = "block";
+                  guessInput.style.display = "none";
+                  message.style.color = "#a3c227";
+                }
+              });
+            } else {
+              message.innerHTML = language(LAN_KEY.RETRY);
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      function isValidUsername(name) {
+        let pattern = /^[a-zA-Z]{1,10}$/;
+        let valid = pattern.test(name) ? true : false;
+        return valid;
+      }
+
+      async function makeFetch(url, post) {
+        let result = await fetch(url, post);
+        if (result.ok) {
+          return result.json();
+        }
+      }
     </script>
-
-</body>
+  </body>
 </html>
