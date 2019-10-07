@@ -39,6 +39,12 @@
     <script>
       const USER_LANG = navigator.language.substring(0, 2);
       const DEFAULT_LANGUAGE = "en";
+
+      let languages = Object.keys(TEXTS); // ["en","no"]
+      if (languages.indexOf(language) < 0) {
+        language = DEFAULT_LANGUAGE;
+      }
+
       const LAN_KEY = {
         TITLE: "TITLE",
         BOUNDS: "BOUNDS",
