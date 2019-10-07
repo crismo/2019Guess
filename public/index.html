@@ -115,7 +115,8 @@
         HINT: "HINT",
         START: "START",
         GUESS: "GUESS",
-        YOUR_GUESS: "YOUR_GUESS"
+        YOUR_GUESS: "YOUR_GUESS",
+        RESTART: "RESTART"
       };
       const TEXTS = {
         en: {
@@ -130,7 +131,8 @@
             "Enter your Username to join the multiplayer guess my number game.",
           START: "Start",
           GUESS: "Guess",
-          YOUR_GUESS: "Your Guess: "
+          YOUR_GUESS: "Your Guess: ",
+          RESTART: "Restart Game"
         },
 
         de: {
@@ -146,7 +148,8 @@
             "Gib einen Benutzernamen ein, um dem Mehrspieler-Spiel 'Errate-meine-Zahl' beizutreten.",
           START: "Start",
           GUESS: "Rate",
-          YOUR_GUESS: "Deine Vermutung: "
+          YOUR_GUESS: "Deine Vermutung: ",
+          RESTART: "Spiel neu starten"
         }
       };
 
@@ -165,6 +168,7 @@
       let user = document.getElementById("user");
       let title = document.getElementById("title");
       let yourGuess = document.getElementById("yourGuess");
+      let restart = document.getElementById("restart");
 
       let min;
       let max;
@@ -177,6 +181,7 @@
       start.innerHTML = language(LAN_KEY.START);
       guess.innerHTML = language(LAN_KEY.GUESS);
       yourGuess.innerHTML = language(LAN_KEY.YOUR_GUESS);
+      restart.innerHTML = language(LAN_KEY.RESTART);
 
       start.addEventListener("click", function(evt) {
         const nameInput = document.getElementById("userName");
