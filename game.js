@@ -58,7 +58,7 @@ app.post("/guess/:user/:number", (req, res) => {
 
 
     let user = req.params.user
-    if(uniqueUsers.indexOf(user) > -1){
+    if(uniqueUsers.indexOf(user) == -1){
         uniqueUsers.push(user);
     }
 

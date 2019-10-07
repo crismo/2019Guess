@@ -1,40 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Guess my number</title>
-</head>
-<body>
+    <style>
+      body {
+        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+        margin: 0;
+      }
+      #wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #f9f9f9;
+        margin: 0 auto;
+        height: 100vh;
+      }
+      #userInput {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+      }
+      #guessInput {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+      }
+      #message {
+        color: #c71585;
+      }
+      #restart {
+        display: none;
+      }
+      button {
+        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+        font-size: 100%;
+        border-radius: 100px;
+        border: 1.3px solid #8f095d;
+        background: #8f095d;
+        color: #fff;
+        width: 18rem;
+        padding: 0.3rem;
+      }
+      input {
+        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+        font-size: 100%;
+        color: #aaa;
+        padding: 0.3rem 0.6rem;
+        margin-left: 0.3rem;
+        border-radius: 100px;
+        border: 0.1rem solid #ddd;
+        background: none;
+        width: 18rem;
+        box-sizing: border-box;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      input:focus,
+      button:focus {
+        outline: none;
+      }
+      button:active {
+        background-color: #6b174c;
+        border-color: #6b174c;
+      }
+    </style>
+  </head>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+  <body>
+    <div id="wrapper">
+      <h1>Guess my number</h1>
+      <p id="hint">
+        Enter your Username to join the multiplayer guess my number game.
+      </p>
 
+      <form id="userInput">
+        <p id="user">Username: <input id="userName" type="text" /></p>
+        <button id="start">Start</button>
+      </form>
+
+      <p id="bounds"></p>
+      <p id="message"></p>
+      <p id="users"></p>
+
+      <form id="guessInput">
+        <p>Your Guess: <input id="number" type="number" /></p>
+        <button id="guess">Guess</button>
+      </form>
+
+      <button id="restart">Restart Game</button>
+    </div>
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
+      let start = document.getElementById("start");
+      let guess = document.getElementById("guess");
+      let number = document.getElementById("number");
+      let bounds = document.getElementById("bounds");
+      let userInput = document.getElementById("userInput");
+      let guessInput = document.getElementById("guessInput");
+      let message = document.getElementById("message");
+      let restart = document.getElementById("restart");
+      let hint = document.getElementById("hint");
+      let users = document.getElementById("users");
+
+      let min;
+      let max;
+      let name;
+
+      start.addEventListener("click", function(evt) {
+        evt.preventDefault();
         const nameInput = document.getElementById("userName");
+        startGame(nameInput);
+      });
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+      guess.addEventListener("click", function(evt) {
+        evt.preventDefault();
+        makeGuess(number);
+      });
 
-                });
+      restart.addEventListener("click", function(evt) {
+        location.reload(true);
+      });
+
+      async function startGame(nameInput) {
+        try {
+          if (nameInput) {
+            name = nameInput.value;
+            if (name.length > 0) {
+              let result = await fetch(
+                `https://warm-forest-85366.herokuapp.com/start/${name}`
+              );
+              if (result.ok) {
+                let data = await result.json();
+                min = data.min;
+                max = data.max;
+                bounds.innerHTML = `Hello ${name}, guess a number between ${min} and ${max}.`;
+
+                hint.style.display = "none";
+                userInput.style.display = "none";
+                guessInput.style.display = "flex";
+                message.innerHTML = "";
+                number.min = min;
+                number.max = max;
+              }
+            } else {
+              message.innerHTML = "Pick a username!";
             }
+          }
+        } catch (error) {
+          console.log(error);
         }
+      }
 
-        
-        
-    
+      async function makeGuess(number) {
+        try {
+          if (number) {
+            const guessedNumber = number.value;
+            if (guessedNumber >= min && guessedNumber <= max) {
+              let result = await fetch(
+                `https://warm-forest-85366.herokuapp.com/guess/${name}/${guessedNumber}`,
+                {
+                  method: "POST",
+                  mode: "no-cors",
+                  cache: "no-cache",
+                  credentials: "same-origin",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  redirect: "follow",
+                  referrer: "no-referrer"
+                }
+              );
+              if (result.ok) {
+                let data = await result.json();
+                message.innerHTML = data.msg;
+                users.innerHTML = "Number of players: " + data.users;
+
+                console.log(data.users);
+                if (data.code == 2000 || data.code == 2030) {
+                  restart.style.display = "block";
+                  guessInput.style.display = "none";
+                  message.style.color = "#a3c227";
+                }
+              }
+            } else {
+              message.innerHTML = `Retry, your number must be between ${min} and ${max}.`;
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     </script>
-
-</body>
+  </body>
 </html>
