@@ -80,7 +80,7 @@
         font-size: 25px;
     }
 
-    #btn{
+    #btn,#btnGuess{
         text-align: center;
         font-size: 25px;
         height: 50px;
@@ -93,6 +93,10 @@
 
     #btn:hover{
         background-color: aqua;
+    }
+
+    #btnGuess{
+        display:none;
     }
 
 </style>
@@ -112,7 +116,8 @@
             <input id="guess" type="number">
         </div>
         <div class="buttonClass">
-            <button id="btn">Guess</button>
+            <button id="btn">Guess!</button>
+            <button id="btnGuess">Guess!</button>
         </div>
         <div class="responseClass">
             <h3 id="message"></h3>
@@ -130,56 +135,62 @@
         const nameInput = document.getElementById("userName");
         let guess = document.getElementById("guess");
         let msg = document.getElementById("message");
-        let btn = document.getElementById("btn");
+        let btnStart = document.getElementById("btn");
+        let btnGuess = document.getElementById("btnGuess");
 
-        let url = "https://guessmynumber2019.herokuapp.com";
+        const name = nameInput.value;
 
-        btn.addEventListener('click',async function(evt){
-            if(!nameInput.value){
+        btnStart.addEventListener('click', function(evt){
+            if(!name || name.length > 50){
                 msg.innerHTML = "Username not valid!";
             }
-            else if(guess.value < 0 || guess.value > 100){
+            else if(!guess.value || guess.value < 0 || guess.value > 100){
                 msg.innerHTML = "Please insert a number between 0 and 100";
             }
             else{
-                const name = nameInput.value
-                if(name.length > 0){
-                    urlStart();
-                    urlGuess();
-                }
+                fetchStart();
+                btnStart.style.display = "none";
+                btnGuess.style.display = "inline";
             }
         })
 
-        function urlStart(){
-            fetch(url + `/start/${name}`)
+        btnGuess.addEventListener('click', function(evt){
+            fetchGuess();
+        });
+
+        //----------------------
+        function fetchStart(){
+            fetch(`/start/${name}`)
             .then(resp =>{
                 if(resp.ok){
-                    resp.body.json()
+                    resp.json()
                 }
             })
-            .then(json => {
-                
-            });
+            .then(function(){
+                msg.innerHTML = `Guess a number between 0 and 100`;
+            })
         }
         
-        function urlGuess(){
+        //----------------------
+        function fetchGuess(){
             let data = {
                 guess: guess.value
             }
 
             let config = {
                 method: "POST",
+                headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify(data)
             }
             
-            fetch(url + `guess/${name}/${guess.value}`,config)
+            fetch(`guess/${name}/${guess.value}`,config)
             .then(resp =>{
                 if(resp.ok){
                     resp.json();
                 }
             })
             .then(json => {
-                
+
             })
         }
         
