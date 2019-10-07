@@ -41,6 +41,8 @@
       const DEFAULT_LANGUAGE = "en";
 
       let languages = Object.keys(TEXTS); // ["en","no"]
+      console.log(languages);
+      console.log(USER_LANG);
       if (languages.indexOf(language) < 0) {
         language = DEFAULT_LANGUAGE;
       }
