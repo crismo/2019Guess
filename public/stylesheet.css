@@ -1,0 +1,39 @@
+body {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color:cornflowerblue;
+    height: 100vh;
+    width: 100vw;
+}
+
+div {
+    text-align: center;
+}
+
+button {
+    width: 50px;
+    margin-top: 10px;
+}
+
+#mainDiv {
+    background-color:cornsilk;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+h1, h3, h4 {
+    color: cornsilk;
+    margin: 2px;
+}
+
+#users {
+    position: absolute;
+    right: 2%;
+    top:2%
+}
+
+#guess {
+    display: none;
+    text-align:center
+}

@@ -1,40 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <link href="stylesheet.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
-
-    <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
-        }
-
-        
-        
-    
-    </script>
+    <div>
+        <h3 id="users"></h3>
+        <h1>Guess my number!</h1>
+        <div id="mainDiv">
+            <div id="unameBox">Username: <input type="text" id="uname"></div>
+            <input type="number" id="guess">
+            <button id="btn">Go!</button>
+        </div>
+        <h4 id="hint"></h4>
+    </div>
 
 </body>
+<script>
+
+    let mainDiv = document.getElementById('mainDiv');
+    let unameBox = document.getElementById('unameBox');
+    let uname = document.getElementById('uname');
+    let guess = document.getElementById('guess');
+    let btn = document.getElementById('btn');
+    let hint = document.getElementById('hint');
+    let users = document.getElementById('users');
+
+    let badChars = ["/", "\\", " ", "#", "%", "?", "<", ">"];
+
+    // Event handlers ---------------------------------------------------------------
+    btn.addEventListener('click', function() {
+        if(btn.innerHTML == "Go!") {
+            startGame();
+        } else {
+            guessNumber();
+        }
+    });
+
+    uname.addEventListener('keydown', function() {
+        if(event.keyCode == 13) {
+            startGame();
+        }
+    });
+
+    guess.addEventListener('keydown', function() {
+        if(event.keyCode == 13) {
+            guessNumber();
+        }
+    })
+
+    // Functions -------------------------------------------------------------------
+    async function startGame() {
+        if (validName(uname.value)) {
+            let resp = await fetch(`/start/${uname.value}`);
+            if (resp.ok) {
+                let data = await resp.json();
+                unameBox.innerHTML = `Hello ${uname.value}, the number is between ${data.min} and ${data.max}`;
+
+                guess.style.display = "inline-block";
+                btn.innerHTML = "Guess!";
+            }
+        } else {
+            alert(`This is not a valid username. Your username cannot contain any of the following characters: ${badChars}`)
+        }
+    }
+
+    async function guessNumber() {
+        if (guess.value) {
+            let resp = await fetch(`/guess/${uname.value}/${guess.value}`, { method: "POST" });
+            if (resp.ok) {
+                let data = await resp.json();
+
+                if (data.code == 2000 || data.code == 2030) { // game over codes (this or another client won)
+                    mainDiv.innerHTML = "Refresh the page to play again.";
+                }
+                hint.innerHTML = data.msg;
+
+                // Update the number of players
+                if (data.users == 1) {
+                    users.innerHTML = `1 player`;
+                } else {
+                    users.innerHTML = `${data.users} players`;
+                }
+            }
+        }
+    }
+
+    function validName(name) {
+        if (name.length == 0) {
+            return false;
+        }
+        for (char of badChars) {
+            if (name.includes(char)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function language(KEY) {
+        // Remember this function needs to do something. ? Don't know what it needs to do
+    }
+
+</script>
+
 </html>

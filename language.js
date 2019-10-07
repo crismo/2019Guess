@@ -38,15 +38,13 @@ module.exports = function() {
       BIGGER: "!الرقم اصغر, حاول مره ثانيه",
       OVER: ".انتهت اللعبه, للاسف"
     },
-
-      de: {
+    de: {
       NOT_STARTED: "Das Spiel hat noch nicht begonnen. Gehe zu /start",
       WIN:"Richtig geraten! Das Spiel ist beendet.",
       LOWER:"Die Zahl ist grösser, versuche noch einmal!",
       BIGGER:"Die Zahl ist kleiner, versuche noch einmal",
       OVER:"Das Spiel ist schon beendet."
     },
-
     bg: {
       NOT_STARTED: "Играта не е започнала. Отиди до /start",
       WIN: "Ти позна правилния отговор! Край на играта.",
@@ -60,6 +58,13 @@ module.exports = function() {
       LOWER:"Du lohku lea stoarrát, geahčal oktii vel!",
       BIGGER:"Du lohku lea unnit, geahčal oktii vel!",
       OVER:"Speallu lea geargan!"
+    },
+    nl:{
+      NOT_STARTED:"Het spel is nog niet gestart. Ga naar /start.",
+      WIN:"Je hebt goed geraden! Game over.",
+      LOWER:"Het nummer is hoger, probeer het nog een keer!",
+      BIGGER:"Het nummer is lager, probeer het nog een keer!",
+      OVER:"Het spel is al over."
     }
 
 
@@ -68,7 +73,8 @@ module.exports = function() {
   return function getClientLang(req, res, next) {
     let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
 
-    language = language.split(",")[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
+    language = language.split(",")[0].split(";")[0].split("-")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
+    language = language.includes('-') ? language.split('-')[0] : language;
 
     let languages = Object.keys(TEXTS); // ["en","no"]
     if (!languages.indexOf(language)) {
