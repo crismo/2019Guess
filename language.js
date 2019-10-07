@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function () {
   //i18n l10n
   const DEFAULT_LANGUAGE = "en";
 
@@ -39,12 +39,12 @@ module.exports = function() {
       OVER: ".انتهت اللعبه, للاسف"
     },
 
-      de: {
+    de: {
       NOT_STARTED: "Das Spiel hat noch nicht begonnen. Gehe zu /start",
-      WIN:"Richtig geraten! Das Spiel ist beendet.",
-      LOWER:"Die Zahl ist grösser, versuche noch einmal!",
-      BIGGER:"Die Zahl ist kleiner, versuche noch einmal",
-      OVER:"Das Spiel ist schon beendet."
+      WIN: "Richtig geraten! Das Spiel ist beendet.",
+      LOWER: "Die Zahl ist grösser, versuche noch einmal!",
+      BIGGER: "Die Zahl ist kleiner, versuche noch einmal",
+      OVER: "Das Spiel ist schon beendet."
     },
 
     bg: {
@@ -54,29 +54,27 @@ module.exports = function() {
       BIGGER: "Числото е по-малко, опитай пак!",
       OVER: "Играта вече приключи, жалко."
     },
-    sa:{
-      NOT_STARTED:"Speallu ii leat álgán. Mana /start.",
+    sa: {
+      NOT_STARTED: "Speallu ii leat álgán. Mana /start.",
       WIN: "Don leat árvidan riekta! Speallu lea geargan.",
-      LOWER:"Du lohku lea stoarrát, geahčal oktii vel!",
-      BIGGER:"Du lohku lea unnit, geahčal oktii vel!",
-      OVER:"Speallu lea geargan!"
+      LOWER: "Du lohku lea stoarrát, geahčal oktii vel!",
+      BIGGER: "Du lohku lea unnit, geahčal oktii vel!",
+      OVER: "Speallu lea geargan!"
     }
-
-
-};
+  };
 
   return function getClientLang(req, res, next) {
     let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
 
-    language = language.split(",")[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
+    language = language.split(/[, -]/)[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
 
     let languages = Object.keys(TEXTS); // ["en","no"]
-    if (!languages.indexOf(language)) {
+    if (languages.indexOf(language) < 0) {
       language = DEFAULT_LANGUAGE;
     }
 
     //------
-    req.language = function(key) {
+    req.language = function (key) {
       let value = TEXTS[language][key];
       if (!value) {
         value = TEXTS[DEFAULT_LANGUAGE][key];
