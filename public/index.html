@@ -133,7 +133,7 @@
             name = nameInput.value;
             if (name.length > 0) {
               let result = await fetch(
-                `https://warm-forest-85366.herokuapp.com/start/${name}`
+                `https://guess-number-meindl.herokuapp.com/start/${name}`
               );
               if (result.ok) {
                 let data = await result.json();
@@ -163,7 +163,7 @@
             const guessedNumber = number.value;
             if (guessedNumber >= min && guessedNumber <= max) {
               let result = await fetch(
-                `https://warm-forest-85366.herokuapp.com/guess/${name}/${guessedNumber}`,
+                `https://guess-number-meindl.herokuapp.com/guess/${name}/${guessedNumber}`,
                 {
                   method: "POST",
                   mode: "no-cors",
