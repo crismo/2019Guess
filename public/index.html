@@ -10,14 +10,18 @@
 
     <input id="userName" type="text">
     <input id="guess" type="number">
-    <button>Guess</button>
+    <button id="guessBtn">Guess</button>
 
     <script>
-    
         function language(KEY){
             // Remember this function needs to do something.
         }
+        //input
         const nameInput = document.getElementById("userName");
+        const valueInput = document.getElementById("guess");
+        //btn
+        const btn1 = document.getElementById("guessBtn");
+
 
         if(nameInput){
             const name = nameInput.value
@@ -26,9 +30,35 @@
                 if(resp.ok){
                     resp.body.json()
                 }}).then(json => {
-
+                   
                 });
             }
+        }
+
+        btn1.addEventListener('click', guessing);
+
+
+        function guessing(){
+            var startRequest = new Request("http://localhost:8000/start/" + nameInput.value);
+
+            fetch(startRequest).then(response => {
+                console.log(response);   
+                if(response.ok){
+                    var myRequest = new Request("http://localhost:8000/guess/" + nameInput.value + "/" + valueInput.value,  { method: 'POST'});
+                    //console.log(myRequest);
+
+                    //Error here, Internal server error code 500. 
+                    fetch(myRequest).then(res => {
+                        console.log(res);    
+                    });
+                }
+            });
+
+
+
+            
+
+
         }
 
         
