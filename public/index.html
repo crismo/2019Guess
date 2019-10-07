@@ -148,10 +148,7 @@
           if (nameInput) {
             name = nameInput.value;
             if (isValidUsername(name)) {
-              makeFetch(
-                `https://meindl-guessmynumber.herokuapp.com/start/${name}`,
-                {}
-              ).then(data => {
+              makeFetch(`/start/${name}`, {}).then(data => {
                 min = data.min;
                 max = data.max;
                 bounds.innerHTML = `${language(
@@ -179,20 +176,17 @@
           if (number) {
             const guessedNumber = number.value;
             if (guessedNumber >= min && guessedNumber <= max) {
-              makeFetch(
-                `https://meindl-guessmynumber.herokuapp.com/guess/${name}/${guessedNumber}`,
-                {
-                  method: "POST",
-                  mode: "no-cors",
-                  cache: "no-cache",
-                  credentials: "same-origin",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  redirect: "follow",
-                  referrer: "no-referrer"
-                }
-              ).then(data => {
+              makeFetch(`/guess/${name}/${guessedNumber}`, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                redirect: "follow",
+                referrer: "no-referrer"
+              }).then(data => {
                 message.innerHTML = data.msg;
                 users.innerHTML = language(LAN_KEY.PLAYERS) + data.users;
 
