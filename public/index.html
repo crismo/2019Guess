@@ -148,11 +148,28 @@
           if (nameInput) {
             name = nameInput.value;
             if (isValidUsername(name)) {
-              let result = await fetch(
-                `https://meindl-guessmynumber.herokuapp.com/start/${name}`
-              );
-              if (result.ok) {
-                let data = await result.json();
+              //   let result = await fetch(
+              //     `https://meindl-guessmynumber.herokuapp.com/start/${name}`
+              //   );
+              //   if (result.ok) {
+              //     let data = await result.json();
+              //     min = data.min;
+              //     max = data.max;
+              //     bounds.innerHTML = `${language(
+              //       LAN_KEY.HELLO
+              //     )} ${name}! ${language(LAN_KEY.BOUNDS)} ${min} - ${max}.`;
+
+              //     hint.style.display = "none";
+              //     userInput.style.display = "none";
+              //     guessInput.style.display = "flex";
+              //     message.innerHTML = "";
+              //     number.min = min;
+              //     number.max = max;
+              //   }
+              await makeFetch(
+                `https://meindl-guessmynumber.herokuapp.com/start/${name}`,
+                {}
+              ).then(data => {
                 min = data.min;
                 max = data.max;
                 bounds.innerHTML = `${language(
@@ -165,7 +182,7 @@
                 message.innerHTML = "";
                 number.min = min;
                 number.max = max;
-              }
+              });
             } else {
               message.innerHTML = language(LAN_KEY.PICK);
             }
@@ -218,6 +235,13 @@
         let pattern = /^[a-zA-Z]{1,10}$/;
         let valid = pattern.test(name) ? true : false;
         return valid;
+      }
+
+      async function makeFetch(url, post) {
+        let result = await fetch(url, post);
+        if (result.ok) {
+          return result.json();
+        }
       }
     </script>
   </body>
