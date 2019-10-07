@@ -215,7 +215,9 @@
                 let data = await result.json();
                 min = data.min;
                 max = data.max;
-                bounds.innerHTML = `Hello ${name}, guess a number between ${min} and ${max}.`;
+                bounds.innerHTML = `${language(
+                  LAN_KEY.HELLO
+                )} ${name}! ${language(LAN_KEY.BOUNDS)} ${min} - ${max}.`;
 
                 hint.style.display = "none";
                 userInput.style.display = "none";
@@ -225,7 +227,7 @@
                 number.max = max;
               }
             } else {
-              message.innerHTML = "Pick a username!";
+              message.innerHTML = language(LAN_KEY.PICK);
             }
           }
         } catch (error) {
@@ -255,7 +257,7 @@
               if (result.ok) {
                 let data = await result.json();
                 message.innerHTML = data.msg;
-                users.innerHTML = "Number of players: " + data.users;
+                users.innerHTML = language(LAN_KEY.PLAYERS) + data.users;
 
                 if (data.code == 2000 || data.code == 2030) {
                   restart.style.display = "block";
@@ -264,7 +266,7 @@
                 }
               }
             } else {
-              message.innerHTML = `Retry, your number must be between ${min} and ${max}.`;
+              message.innerHTML = language(LAN_KEY.RETRY);
             }
           }
         } catch (error) {
