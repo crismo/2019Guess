@@ -8,38 +8,71 @@
 </head>
 <body>
 
-    <h1>Guess a Number</h1>
-    <p>This is a Guessing game, type inn a username and you can guess a number between 1 and 100.</p>
+    <fieldset>
+        <h1>Guess a Number</h1>
+        <p>This is a Guessing game, type inn a username and you can guess a number between 1 and 100.</p>
 
-    <label for="userName">Username:</label>
-    <input id="userName" type="text">
-    <br>
-    <label for="guess">Your guess:</label>
-    <input id="guess" type="number">
-    <br>
-    <button>Guess</button>
+        <p id="nameTag">Username:</p>
+        <input id="userName" type="text" placeholder="username">
+
+        <input id="guess" type="number" placeholder="number" hidden>
+        <br>
+
+        <button id="btn1" >Start</button>
+        <button id="btn2" hidden>Guess</button>
+        <p id="serverResp"></p>
+    </fieldset>
 
     <script>
+
+      
     
         function language(KEY){
             // Remember this function needs to do something.
         }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
+        const nameInput = document.getElementById("userName");
+        const nameTag = document.getElementById('nameTag');
+
+
+        let guessInput = document.getElementById("guess");
+        let btn1 = document.getElementById('btn1');
+        let btn2 = document.getElementById('btn2');
+        let serverResp = document.getElementById('serverResp');
+
+        
+        btn1.addEventListener('click', function(evt) {    
+            if(nameInput){
             const name = nameInput.value
             if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
+                fetch(`/start/${name}`).then(res =>{
+                if(res.ok){
+                    return res.json()
                 }}).then(json => {
-
+                    serverResp.innerHTML = `Guess a number between ${json.min} and ${json.max}`;
+                    console.log("Game Started, guess a number");
                 });
             }
         }
-
+        nameTag.innerHTML = `Username: ${nameInput.value}`
+        btn1.hidden = true;
+        nameInput.hidden = true;
+        btn2.hidden = false;
+        guessInput.hidden = false;
+    });
         
-        
+        btn2.addEventListener('click', function(evt) {    
+                fetch(`/guess/${nameInput.value}/${guessInput.value}`,{
+                    method: "POST"
+                }).then(res =>{
+                    if(res.ok){
+                    return res.json();
+                    }
+                }).then(json =>{
+                    serverResp.innerHTML = json.msg;
+                });
+                
+        });
     
     </script>
 
