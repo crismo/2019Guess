@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <!--
     <script src= "../game.js"></script>
     <script src = "../language.js"></script>
+    -->
 </head>
 
 <style>
@@ -67,7 +69,7 @@
     }
 
     .responseClass{
-        grid-area: resp;
+        grid-area: response;
     }
 
     #userName, #guess{
@@ -77,7 +79,7 @@
         border:0px;
     }
 
-    #userLabel, #guessLabel{
+    #userLabel, #guessLabel, #message{
         font-size: 25px;
     }
 
@@ -122,31 +124,71 @@
     
 </body>
 
-    <script>
-    
+<script>
+        
         function language(KEY){
-            // Remember this function needs to do something.
+            // Remember this function needs to do something. 
         }
+
         const nameInput = document.getElementById("userName");
         let guess = document.getElementById("guess");
-        let msg = document.getElementById("msg");
+        let msg = document.getElementById("message");
+        let btn = document.getElementById("btn");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(res =>{
-                if(res.ok){
-                    res.body.json()
-                }}).then(json => {
+        let url = "https://guessmynumber2019.herokuapp.com";
 
-                });
+        btn.addEventListener('click',async function(evt){
+            if(!nameInput.value){
+                msg.innerHTML = "Username not valid!";
             }
-        }
+            else if(guess.value < 0 || guess.value > 100){
+                msg.innerHTML = "Please insert a number between 0 and 100";
+            }
+            else{
+                const name = nameInput.value
+                if(name.length > 0){
+                    urlStart();
+                    urlGuess();
+                }
+            }
+        })
 
+        function urlStart(){
+            fetch(url + `/start/${name}`)
+            .then(resp =>{
+                if(resp.ok){
+                    resp.body.json()
+                }
+            })
+            .then(json => {
+                
+            });
+        }
+        
+        function urlGuess(){
+            let data = {
+                guess: guess.value
+            }
+
+            let config = {
+                method: "POST",
+                body: JSON.stringify(data)
+            }
+            
+            fetch(url + `guess/${name}/${guess.value}`,config)
+            .then(resp =>{
+                if(resp.ok){
+                    resp.json();
+                }
+            })
+            .then(json => {
+                
+            })
+        }
         
         
     
-    </script>
+</script>
 
 
 </html>
