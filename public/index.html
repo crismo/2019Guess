@@ -181,7 +181,6 @@
                 message.innerHTML = data.msg;
                 users.innerHTML = "Number of players: " + data.users;
 
-                console.log(data.users);
                 if (data.code == 2000 || data.code == 2030) {
                   restart.style.display = "block";
                   guessInput.style.display = "none";
