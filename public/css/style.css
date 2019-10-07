@@ -1,0 +1,64 @@
+body {
+  font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+  margin: 0;
+}
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f9f9f9;
+  margin: 0 auto;
+  height: 100vh;
+}
+#userInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+#guessInput {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+#message {
+  color: #c71585;
+}
+#restart {
+  display: none;
+}
+button {
+  font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+  font-size: 100%;
+  border-radius: 100px;
+  border: 1.3px solid #8f095d;
+  background: #8f095d;
+  color: #fff;
+  width: 18rem;
+  padding: 0.3rem;
+}
+input {
+  font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
+  font-size: 100%;
+  color: #aaa;
+  padding: 0.3rem 0.6rem;
+  margin-left: 0.3rem;
+  border-radius: 100px;
+  border: 0.1rem solid #ddd;
+  background: none;
+  width: 18rem;
+  box-sizing: border-box;
+}
+h1 {
+  margin-top: 0;
+}
+input:focus,
+button:focus {
+  outline: none;
+}
+button:active {
+  background-color: #6b174c;
+  border-color: #6b174c;
+}

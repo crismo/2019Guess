@@ -5,72 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Guess my number</title>
-    <style>
-      body {
-        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
-        margin: 0;
-      }
-      #wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: #f9f9f9;
-        margin: 0 auto;
-        height: 100vh;
-      }
-      #userInput {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-      }
-      #guessInput {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-      }
-      #message {
-        color: #c71585;
-      }
-      #restart {
-        display: none;
-      }
-      button {
-        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
-        font-size: 100%;
-        border-radius: 100px;
-        border: 1.3px solid #8f095d;
-        background: #8f095d;
-        color: #fff;
-        width: 18rem;
-        padding: 0.3rem;
-      }
-      input {
-        font-family: "Montserrat", "Calibri-Light", Arial, sans-serif;
-        font-size: 100%;
-        color: #aaa;
-        padding: 0.3rem 0.6rem;
-        margin-left: 0.3rem;
-        border-radius: 100px;
-        border: 0.1rem solid #ddd;
-        background: none;
-        width: 18rem;
-        box-sizing: border-box;
-      }
-      h1 {
-        margin-top: 0;
-      }
-      input:focus,
-      button:focus {
-        outline: none;
-      }
-      button:active {
-        background-color: #6b174c;
-        border-color: #6b174c;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
   </head>
 
   <body>
@@ -124,11 +59,11 @@
           BOUNDS: "Guess a number between the two bounds: ",
           HELLO: "Hello",
           PLAYERS: "Number of players: ",
-          PICK: "Pick a username!",
+          PICK: "Pick a valid username! (Maximum 10 characters, no numbers)",
           USERNAME: "Username: ",
           RETRY: "Retry, your number must be between those bounds. ",
           HINT:
-            "Enter your Username to join the multiplayer guess my number game.",
+            "Enter your username to join the multiplayer guess my number game.",
           START: "Start",
           GUESS: "Guess",
           YOUR_GUESS: "Your Guess: ",
@@ -140,7 +75,8 @@
           BOUNDS: "Errate die Zahl zwischen den zwei Grenzen: ",
           HELLO: "Hallo",
           PLAYERS: "Anzahl der Spieler: ",
-          PICK: "Wähle einen Benutzernamen!",
+          PICK:
+            "Wähle einen gültigen Benutzernamen! (Maximal 10 Zeichen, keine Zahlen)",
           USERNAME: "Benutzername: ",
           RETRY:
             "Versuche es nochmal, die Zahl muss zwischen den zwei Grenzen liegen.",
@@ -152,8 +88,6 @@
           RESTART: "Spiel neu starten"
         }
       };
-
-      console.log(language("TITLE"));
 
       let start = document.getElementById("start");
       let guess = document.getElementById("guess");
@@ -172,6 +106,8 @@
       let min;
       let max;
       let name;
+      const WIN = 2000;
+      const OVER = 2030;
 
       //initial language setup
       user.innerHTML = language(LAN_KEY.USERNAME);
@@ -211,7 +147,7 @@
         try {
           if (nameInput) {
             name = nameInput.value;
-            if (name.length > 0) {
+            if (isValidUsername) {
               let result = await fetch(
                 `https://guess-number-meindl.herokuapp.com/start/${name}`
               );
@@ -263,7 +199,7 @@
                 message.innerHTML = data.msg;
                 users.innerHTML = language(LAN_KEY.PLAYERS) + data.users;
 
-                if (data.code == 2000 || data.code == 2030) {
+                if (data.code == WIN || data.code == OVER) {
                   restart.style.display = "block";
                   guessInput.style.display = "none";
                   message.style.color = "#a3c227";
@@ -276,6 +212,12 @@
         } catch (error) {
           console.log(error);
         }
+      }
+
+      function isValidUsername(name) {
+        let pattern = /^[a-zA-Z]{1,10}$/;
+        let valid = pattern.test(name) ? true : false;
+        return valid;
       }
     </script>
   </body>
