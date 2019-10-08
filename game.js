@@ -60,6 +60,7 @@ app.post("/guess/:user/:number", (req, res) => {
     let user = req.params.user
     if(uniqueUsers.indexOf(user) > -1){
         uniqueUsers.push(user);
+        console.log(`${user} joined the game!`);
     }
 
     let responseObj = {code: GAME_CODES.ERROR, msg: req.language(LAN_KEY.NOT_STARTED)};
