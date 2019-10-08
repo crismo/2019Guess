@@ -7,32 +7,64 @@
     <title>Guess my number</title>
 </head>
 <body>
+    <h2>Guess a number between 1-200!</h2>
+    <p>Username: <input id="userName" type="text"> <button onclick="btnStart()">Start</button></p>
+    <p>Input number: <input id="guess" type="number"> <button onclick="btnGuess()">Guess</button></p>
+    <p id="txt"></p>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+
 
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
 
-                });
+        let txt = document.getElementById('txt');
+
+//------------------------------------------------------------------------------------------------
+
+        function btnStart()
+        {
+            const nameInput = document.getElementById("userName");
+
+            if(nameInput){
+                const name = nameInput.value;
+                if(name.length > 0){
+                    fetch(`/start/${name}`).then(resp =>{
+                    if(resp.ok){
+                        resp.json().then(json => {
+                            txt.innerHTML = "Guess a number";                    
+                    })
+                    }});
+                }
             }
         }
 
-        
-        
+        function btnGuess()
+        {
+            const nameInput = document.getElementById("userName");
+            let guessInput = document.getElementById("guess");
+
+            if(nameInput){
+                const name = nameInput.value;
+                let guess = guessInput.value;
+                if(name.length > 0){
+                    fetch(`/guess/${name}/${guess}` , {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'accept-language': 'en'
+                        }
+                    }).then(resp =>{
+                    if(resp.ok){
+                        resp.json().then(json => {
+                            txt.innerHTML = json.msg;                    
+                        })
+                    }});
+                }
+            }
+            
+        }
+
+//------------------------------------------------------------------------------------------------
     
     </script>
 
