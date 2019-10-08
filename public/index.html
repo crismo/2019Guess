@@ -7,12 +7,7 @@
     <title>Guess my number</title>
 </head>
 <body>
-
-    <fieldset>
-        <h1>Guess a Number</h1>
-        <p>This is a Guessing game, type inn a username and you can guess a number between 1 and 100.</p>
-
-        <p id="nameTag">Username:</p>
+        <h1 id="nameTag"></h1>
         <input id="userName" type="text" placeholder="username">
 
         <input id="guess" type="number" placeholder="number" hidden>
@@ -21,7 +16,6 @@
         <button id="btn1" >Start</button>
         <button id="btn2" hidden>Guess</button>
         <p id="serverResp"></p>
-    </fieldset>
 
     <script>
 
@@ -54,24 +48,29 @@
                 });
             }
         }
-        nameTag.innerHTML = `Username: ${nameInput.value}`
+        nameTag.innerHTML = nameInput.value
         btn1.hidden = true;
         nameInput.hidden = true;
         btn2.hidden = false;
         guessInput.hidden = false;
     });
         
-        btn2.addEventListener('click', function(evt) {    
+        btn2.addEventListener('click', function(evt) {  
+            if(guessInput){  
+                let guess = guessInput.value;
+                if(guess.length > 0){
                 fetch(`/guess/${nameInput.value}/${guessInput.value}`,{
                     method: "POST"
                 }).then(res =>{
+                    console.log(res);
                     if(res.ok){
                     return res.json();
                     }
                 }).then(json =>{
                     serverResp.innerHTML = json.msg;
                 });
-                
+            }
+        }
         });
     
     </script>
