@@ -5,36 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
+    <div class="user">
+        <h2>Your username</h2>
+        <input id="userName" type="text">
+        <button id="subUser">Submit</button>
+    </div>
+    <div class="number">
+        <h2>Guess number beteween <span id="numMin"></span> and <span id="numMax"></span></h2>
+        <input id="guess" type="number">
+        <button id="subGuess">Guess</button>
+    </div>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <div>
+        <span id="msg"></span>
+    </div>
 
-    <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
-        }
-
-        
-        
-    
-    </script>
+    <script type="text/javascript" src="js/guess.js"></script>
 
 </body>
 </html>
