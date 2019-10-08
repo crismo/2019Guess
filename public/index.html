@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="CSS/GuessStyles.css">
     <title>Guess my number</title>
 </head>
+
 <body>
-        <h1 id="nameTag"></h1>
-        <input id="userName" type="text" placeholder="username">
+    <div class="border"></divclass>
+        <div>
+            <h1 id="nameTag"></h1>
+            <input id="userName" type="text" placeholder="username" style="margin-top: 58px">
 
-        <input id="guess" type="number" placeholder="number" hidden>
-        <br>
+            <input id="guess" type="number" placeholder="number" hidden>
+            <br>
 
-        <button id="btn1" >Start</button>
-        <button id="btn2" hidden>Guess</button>
-        <p id="serverResp"></p>
+            <button id="btn1" >Start</button>
+            <button id="btn2" hidden>Guess</button>
+            <p id="serverResp"></p>
+        </div>
+    </div>
 
     <script>
-
-      
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
 
         const nameInput = document.getElementById("userName");
         const nameTag = document.getElementById('nameTag');
@@ -43,8 +43,7 @@
                 if(res.ok){
                     return res.json()
                 }}).then(json => {
-                    serverResp.innerHTML = `Guess a number between ${json.min} and ${json.max}`;
-                    console.log("Game Started, guess a number");
+                    serverResp.innerHTML = `${json.msg}`;
                 });
             }
         }
@@ -62,7 +61,6 @@
                 fetch(`/guess/${nameInput.value}/${guessInput.value}`,{
                     method: "POST"
                 }).then(res =>{
-                    console.log(res);
                     if(res.ok){
                     return res.json();
                     }

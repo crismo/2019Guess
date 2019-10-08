@@ -1,0 +1,25 @@
+body {
+    background-color: white; 
+    text-align: center
+}
+div {
+    background-color:rgb(216, 212, 212); 
+    width: 50%; 
+    height:200px;
+    min-height:50%;
+    display: inline-block
+}
+
+p {
+    font-family: "ARIAL", VERDANA, sans-serif;
+}
+
+h1{
+    font-family: "ARIAL", VERDANA, sans-serif;
+}
+
+div.border {
+    border: 6px solid darkgray;
+    border-radius: 12px;
+    border-style: ridge;
+}
