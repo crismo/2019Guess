@@ -1,40 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
 </head>
+
 <body>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <input id="userName" type="text" placeholder="user name">
+    <input id="guess" type="number" placeholder="number" hidden>
+    <button id="btnStart">Start</button>
+    <button id="btnGuess" hidden>Guess</button>
+    <p id="serverResponse"></p>
 
     <script>
-    
-        function language(KEY){
+        const nameInput = document.getElementById("userName");
+        let guessInput = document.getElementById("guess");
+        let btnStart = document.getElementById("btnStart");
+        let btnGuess = document.getElementById("btnGuess");
+        let serverResponse = document.getElementById("serverResponse");
+
+        btnStart.addEventListener("click", startGame);
+        btnGuess.addEventListener("click", postGuess);
+
+
+        function language(KEY) {
+
             // Remember this function needs to do something.
         }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
+        function startGame() {
+            if (nameInput) {
+                const name = nameInput.value
+                if (name.length > 0) {
+                    fetch(`/start/${name}`).then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                    }).then(json => {
+                        btnStart.hidden = true;
+                        nameInput.hidden = true;
+                        btnGuess.hidden = false;
+                        guessInput.hidden = false;
+                        serverResponse.innerHTML = json.msg + json.min + ", " + json.max;
+                    });
+                }
             }
         }
 
-        
-        
-    
+        function postGuess() {
+            if (guessInput) {
+                let guess = guessInput.value;
+                if (guess.length > 0) {
+                    fetch(`/guess/${nameInput.value}/${guess}`, {
+                        method: 'POST'
+                    }).then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                    }).then(json => {
+                        serverResponse.innerHTML = json.msg;
+                    })
+                }
+            }
+        }
+
+
+
+
+
     </script>
 
 </body>
+
 </html>

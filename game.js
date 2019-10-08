@@ -24,6 +24,7 @@ const GAME_CODES = {
 
 const LAN_KEY =  {
     NOT_STARTED:"NOT_STARTED",
+    GUESS_INFO:"GUESS_INFO",
     WIN:"WIN",
     LOWER:"LOWER",
     BIGGER:"BIGGER",
@@ -51,7 +52,7 @@ app.get("/start/:user", function (req, response) {
         isOngoing = true;
         uniqueUsers = [req.params.user];
     }
-    response.json({code: HTTP_CODES.OK, min: MIN, max: MAX});
+    response.json({code: HTTP_CODES.OK, min: MIN, max: MAX, msg: req.language(LAN_KEY.GUESS_INFO)});
 });
 
 app.post("/guess/:user/:number", (req, res) => {
