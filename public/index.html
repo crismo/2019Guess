@@ -28,7 +28,7 @@
 
 
         function language(KEY) {
-            
+
             // Remember this function needs to do something.
         }
 
@@ -45,24 +45,27 @@
                         nameInput.hidden = true;
                         btnGuess.hidden = false;
                         guessInput.hidden = false;
-                        serverResponse.innerHTML = `Guess a number between ${json.min} and ${json.max}`;
+                        serverResponse.innerHTML = json.msg + json.min + ", " + json.max;
                     });
                 }
             }
         }
 
         function postGuess() {
-            
-            let guess = guessInput.value;
-            fetch(`/guess/${nameInput.value}/${guess}`, {
-                method: 'POST'
-            }).then(res => {
-                if(res.ok) {
-                    return res.json();
+            if (guessInput) {
+                let guess = guessInput.value;
+                if (guess.length > 0) {
+                    fetch(`/guess/${nameInput.value}/${guess}`, {
+                        method: 'POST'
+                    }).then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                    }).then(json => {
+                        serverResponse.innerHTML = json.msg;
+                    })
                 }
-            }).then(json => {
-                serverResponse.innerHTML = json.msg;
-            })
+            }
         }
 
 

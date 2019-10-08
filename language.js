@@ -5,14 +5,16 @@ module.exports = function () {
   const TEXTS = {
     en: {
       NOT_STARTED: "Game not started. Go to /start",
-      WIN: "You guessed correctly ! Game over.",
+      GUESS_INFO: "Guess a number between the two following numbers: ",
+      WIN: "You guessed correctly! Game over.",
       LOWER: "The number is bigger, try again!",
       BIGGER: "The number is lower, try again!",
       OVER: "The game is already over, too bad."
     },
     no: {
       NOT_STARTED: "Ikke noe pågående spill. Gå til /start",
-      WIN: "Du gjettet riktig! Game over.",
+      GUESS_INFO: "Gjett et tall mellom de to følgende tallene: ",
+      WIN: "Du gjettet riktig! Spillet er over.",
       LOWER: "Tallet er større, prøv på nytt!",
       BIGGER: "Tallet er mindre, prøv på nytt!",
       OVER: "Spillet er allerede over."
