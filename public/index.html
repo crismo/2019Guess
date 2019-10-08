@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    <title>Guess my number</title>
+</head>
+
+<body>
+    
+    <h1>Guess my number!</h1>
+    <label id="userName"></label> <input id="userNameInput" type="text">
+    <button id="userbtn" onclick="addUser()"></button>
+    <br><br>
+    <label id="guessLabel"></label> <input id="guess" type="number">
+    
+    <button id="guessbtn"></button>
+
+    <h2 id="response"></h2>
+ 
+</body>
+
+<script>
+
+    const userName = document.getElementById("userName");
+    const nameInput = document.getElementById("userNameInput");
+    const guessLabel = document.getElementById("guessLabel");
+    const guessNum = document.getElementById("guess");
+
+    const userbtn = document.getElementById("userbtn");
+    const guessbtn = document.getElementById("guessbtn");
+
+    let response = document.getElementById("response");
+
+
+    let name; 
+    let number;
+    let userLang;
+
+    function language(KEY){
+        userLang = KEY;
+        if(userLang == "nb-NO"){
+            userLang = "no";
+            userName.textContent = CLIENTLANG.no.USERNAME;
+            guessLabel.textContent = CLIENTLANG.no.GUESS;
+            userbtn.textContent = CLIENTLANG.no.SUBMIT;
+            guessbtn.textContent = CLIENTLANG.no.GUESSBTN;
+        } else{
+            serName.textContent = CLIENTLANG.en.USERNAME;
+            guessLabel.textContent = CLIENTLANG.en.GUESS;
+            userbtn.textContent = CLIENTLANG.en.SUBMIT;
+            guessbtn.textContent = CLIENTLANG.en.GUESSBTN;
+        }
+        console.log(userLang);
+    };
+
+
+    const CLIENTLANG = {
+    en: {
+      USERNAME: "Username",
+      SUBMIT: "Submit",
+      GUESS: "Guess my number",
+      GUESSBTN: "Guess",
+      USERERR:"Enter a username to play."
+    },
+    no: {
+      USERNAME: "Brukernavn",
+      SUBMIT: "Bruk",
+      GUESS: "Gjett mitt nummer",
+      GUESSBTN: "Gjett",
+      USERERR:"Fyll inn et brukernavn for å spille."
+    }};
+
+    language(navigator.language);
+
+    function addUser(){
+            if(nameInput){
+            name = nameInput.value;
+            if  (name.length > 0){
+                const options = {
+                    method: 'GET',
+                    header: {
+                        'Content-Type':'application/json'
+                    }
+                }
+                fetch(`/start/${name}`,options).then(resp =>{ 
+                    if(resp.ok){
+                        return resp.json()
+                    }
+            }).then(json => {
+                if(userLang == "no"){
+                    response.textContent = `Gjett et nummer mellom ${json.min} og ${json.max}`;
+                }else{
+                    response.textContent = `Guess a number between ${json.min} and ${json.max}`;
+                }  
+            })
+            }
+        }
+    };
+
+    guessbtn.addEventListener("click", function(evt){
+        if(name){
+            if(guessNum){
+                number = guessNum.value;
+                    const goptions = {
+                    method: 'POST',
+                    header: {
+                        'Content-Type':'application/json'
+                        }
+                    }
+                    fetch(`/guess/${name}/${number}`,goptions).then(resp =>{ 
+                        if(resp.ok){
+                            return resp.json()
+                        }
+                    }).then(json => {
+                        response.textContent =  json.msg;
+                    })
+            }
+        }else{
+            if(userLang == "no"){
+                response.textContent = CLIENTLANG.no.USERERR;
+            }else{
+                response.textContent = CLIENTLANG.en.USERERR;
+            }
+        }
+    });
+
+    
+
+
+
+
+</script>
+
+</html>
