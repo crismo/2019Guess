@@ -74,6 +74,10 @@ module.exports = function() {
     if (!languages.indexOf(language)) {
       language = DEFAULT_LANGUAGE;
     }
+    
+    if(language == "nb-NO"){
+      language = "no";
+    }
 
     //------
     req.language = function(key) {
