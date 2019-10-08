@@ -7,29 +7,96 @@
     <title>Guess my number</title>
 </head>
 <body>
+    <select id="langSelector">
+        <option value="no"selected="selected">Norsk</option>
+        <option value="fr">Fransk</option>
+        <option value="en">Engelsk</option>
+        <option value="ar">Arabisk</option>
+      </select>
+
+      <br></br>
 
     <input id="userName" type="text">
+    <button onclick="start()">Start</button>
+    <br></br>
     <input id="guess" type="number">
-    <button>Guess</button>
+    <button onclick="guess()">Guess</button>
+    <p id="txtOut"></p>
 
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
+        let languages = (min, max) => {
+            return {
+                "no": `Et tall mellom ${min} og ${max}`,
+                "en": `A number between ${min} and ${max}`,
+                "fr": `Un nombre entre ${min} et ${max}`,
+                "ar": `رقم بين ${min} و ${max}`
+            }
         }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+        
 
+
+        let txtOut = document.getElementById("txtOut");
+        let langSelector = document.getElementById("langSelector");
+
+        function language(KEY){
+            console.log(KEY);
+            
+        }
+
+        language(navigator.language);
+
+        
+        function start(){
+            const nameInput = document.getElementById("userName");
+            const lang = langSelector.options[langSelector.selectedIndex].value;
+            
+            if(nameInput){
+                const name = nameInput.value
+                if(name.length > 0){
+                    fetch(`/start/${name}`, {
+                        method: "GET",
+                        headers: {
+                            "accpet-language": lang
+                        }
+                    }).then(resp =>{
+                    if(resp.ok){
+                        resp.json().then(json => {
+                            console.log(languages(json.min, json.max)[lang]);
+                            console.log(json);
+                            txtOut.innerHTML = languages(json.min, json.max)[lang];
+                            
+                        });
+                    }
+                    });
+                }
+            }
+        }
+
+        function guess() {
+            const number = document.getElementById("guess");
+            const nameInput = document.getElementById("userName");
+            const lang = langSelector.options[langSelector.selectedIndex].value;
+
+            if (number) {
+                fetch(`/guess/${nameInput.value}/${number.value}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "accept-language": lang
+                    }
+                }).then(resp =>{
+                    if(resp.ok){
+                        resp.json().then(json => {
+                            console.log(json);
+
+                            txtOut.innerHTML = `${json.msg}`;
+                        });
+                    }
                 });
             }
         }
+       
 
         
         
