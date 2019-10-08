@@ -37,9 +37,9 @@
 <body>
     <div class="cont">
 
-        <h1>Guess my number</h1>
+        <h1 id="gameName">Guess my number</h1>
 
-        <label for="userName">Enter a username</label>
+        <label id="userLabel" for="userName">Enter a username</label>
         <input id="userName" type="text">
         <button id="btnSubmit">Submit</button>
 
@@ -57,10 +57,9 @@
 
     <script>
 
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-
+        const gameName = document.getElementById("gameName");
+        
+        const userLabel = document.getElementById("userLabel");
         const nameInput = document.getElementById("userName");
         const btnSubmit = document.getElementById("btnSubmit");
         
@@ -72,7 +71,47 @@
 
         let name; 
         let guess;
-        
+
+        let userLanguage;
+
+        const clientLanguages = {
+            no: {
+                gameName: "Gjett tallet mitt",
+                userName: "Lag et brukernavn",
+                submit: "Bruk",
+                guessLabel: "Skriv inn et tall",
+                gussbtn: "Gjett"
+            },
+            en: {
+                gameName: "Guess my number",
+                userName: "Enter a username",
+                submit: "Submit",
+                guessLabel: "Your guess",
+                gussbtn: "Guess"
+            }
+        }
+
+        function languageFunc(KEY){
+            userLanguage = KEY;
+
+            if(userLanguage == "nb-NO"){
+                userLanguage = "no";
+                gameName.textContent = clientLanguages.no.gameName;
+                userLabel.textContent = clientLanguages.no.userName;
+                btnSubmit.textContent = clientLanguages.no.submit;
+                guessLabel.textContent = clientLanguages.no.guessLabel;
+                btnGuess.textContent = clientLanguages.no.gussbtn;
+            }else{
+                gameName.textContent = clientLanguages.en.gameName;
+                userLabel.textContent = clientLanguages.en.userName;
+                btnSubmit.textContent = clientLanguages.en.submit;
+                guessLabel.textContent = clientLanguages.en.guessLabel;
+                btnGuess.textContent = clientLanguages.en.gussbtn;
+            }
+        }
+
+        languageFunc(navigator.language);
+
         btnSubmit.addEventListener('click', function(evt){
             if(nameInput){
                 name = nameInput.value
@@ -92,7 +131,12 @@
                         guessInput.style.visibility = "visible";
                         btnGuess.style.visibility = "visible";
                         txtOut.style.visibility = "visible";
-                        txtOut.textContent = `Guess a number between ${json.min} and ${json.max}`;
+                        if(userLanguage == "no"){
+                            txtOut.textContent = `Gjett et tall mellom ${json.min} og ${json.max}`;
+                        }else{
+                            txtOut.textContent = `Guess a number between ${json.min} and ${json.max}`;
+                        }
+                        
                     }).catch(error =>{
                         console.error(error);
                     })
