@@ -5,35 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+
 </head>
 <body>
 
     <input id="userName" type="text">
     <input id="guess" type="number">
-    <button>Guess</button>
+    <button id="btn">Guess</button>
+    <button id = "btn2">Start</button>
+    <p id= "serverResponce"></p>
 
     <script>
+
     
         function language(KEY){
             // Remember this function needs to do something.
         }
         const nameInput = document.getElementById("userName");
+        let guessBtn = document.getElementById ("btn");
+        let guessInput = document.getElementById ("guess");
+        let start = document.getElementById ("btn2");
+        guessBtn.addEventListener('click', postGuess);
+        start.addEventListener ('click', startGame);
+        let serverResponce = document.getElementById ("serverResponce")
+
+function startGame() {
+
 
         if(nameInput){
             const name = nameInput.value
             if(name.length > 0){
                 fetch(`/start/${name}`).then(resp =>{
                 if(resp.ok){
-                    resp.body.json()
+                    return resp.json()
                 }}).then(json => {
-
+                    serverResponce.innerHTML = `${json.min} - ${json.max} ------------------------------^`;
+                    console.log(json)
                 });
             }
         }
+    }
+        
+    function postGuess() {
+        if (guessInput){
+            let guess = guessInput.value
+            const name = nameInput.value
+        fetch (`/guess/${name}/${guess}` , {
+            method: `POST`
+        }).then(resp => {
+            console.log(resp)
+            if (resp.ok){
+                return resp.json();
+            }
+        }).then (resp2 => {
+            serverResponce.innerHTML = resp2.msg;
+        });
+    }}
 
-        
-        
-    
+
     </script>
 
 </body>
