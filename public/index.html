@@ -4,253 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/style.css">
     <title>Guess my number</title>
-    <link rel="stylesheet" type="text/css" href="./css/client.css">
 </head>
 <body>
-<select id="languages">
-    <option value="en" selected><img src="img/flag_en.png"/> EN</option>
-    <option value="no">NO</option>
-    <option value="ro">RO</option>
-    <option value="fr">FR</option>
-    <option value="ar">AR</option>
-    <option value="de">DE</option>
-    <option value="bg">BG</option>
-    <option value="sa">SA</option>
-</select>
-<div id="welcome">Guess my number!</div>
-<label for="user" class="label" id="usertxt">Username: </label><br/>
-<input id="user" type="text" class="input"><br/>
-<div id="start" class="button">Start new game</div>
-<div id="minmax"> </div>
-<label for="guess" class="label" id="guesstxt">Your guess: </label><br/>
-<input id="guess" type="number" class="input">
-<div id="sendGuess" class="button">Guess!</div>
-<div id="outDiv"> </div>
-<div id="users">
-    <div id="players">Players:</div>
-    <div id="usersNr">0</div>
+<div id="sporreOmNavnContainer">
+    <input type="text" id="navn">
+    <button id="setNavn" >Lagre navn</button>
 </div>
 
-</body>
-  <script type="module" src="js/client.js"></script>
+<div id="gjetteContainer" hidden >
+    <input type="number" id="guess">
+    <button id="makeguess" >Guess</button>
+    <span id="serverMsg">
+
+    </span>
+</div>
+
 <script>
-    const MSG_KEY = {
-        NO_NAME: "NO_NAME",
-        NO_GUESS: "NO_GUESS",
-        USERNAME: "USERNAME",
-        YOUR_GUESS: "YOUR_GUESS",
-        PLAYERS: "PLAYERS",
-        START: "START",
-        GUESS: "GUESS",
-        INSTRUCTIONS: "INSTRUCTIONS"
-    };
-
-    let usertxt = document.getElementById("usertxt");
-    let guesstxt = document.getElementById("guesstxt");
-    let playerstxt = document.getElementById("players");
-
-    let userin = document.getElementById("user");
-    let guessin = document.getElementById("guess");
-    let userNr = document.getElementById("usersNr");
-
-    let languageSelect = document.getElementById("languages");
-
-    let guessbtn = document.getElementById("sendGuess");
-    let startbtn = document.getElementById("start");
-
-    let numDiv = document.getElementById("minmax");
-    let outDiv = document.getElementById("outDiv");
-
-    guessbtn.addEventListener('click', tryGuess);
-    startbtn.addEventListener('click', tryStart);
-
-    window.addEventListener('keyup', hitEnter);
-
-    languageSelect.addEventListener('change', changeLang);
-
-    let MIN;
-    let MAX;
-    let msgCache;
-
-    changeLang();
-
-    function tryGuess() {
-        let id = checkUser(userin.value);
-        let guess = checkGuess(guessin.value);
-        let lang = languageSelect.value;
-
-        if(id && guess) {
-            fetch(`guess/${id}/${guess}`,
-                {
-                    method:'POST',
-                    headers: {
-                        'Content-type' : 'application/json',
-                        'accept-language' : lang
-                    }
-                }
-            ).then(resp => {
-                if(resp.ok) {
-                    resp.text().then(resp => {
-
-                        let answer = JSON.parse(resp);
-
-                        writeOut(answer.users, userNr, 'div', true);
-                        writeOut(msgCache.INSTRUCTIONS, numDiv, 'h3', true);
-                        writeOut(`${MIN} - ${MAX}`, numDiv,'h3', false);
-                        if(answer.code === 2030) {
-                            writeOut(`${answer.winner} has won!`, outDiv, 'h2', true);
-                            writeOut(`The right number was ${answer.number}.`,outDiv, 'h2', false);
-
-                        } else {
-                            writeOut(`${guess}: ${answer.msg}`, outDiv, 'h2', true);
-                        }
-
-                    })
-                }
-                else {
-                    console.log(resp);
-                }
-            });
-        }
-        else if (!id){
-            sendError(MSG_KEY.NO_NAME);
-        }
-        else if (!guess) {
-            sendError(MSG_KEY.NO_GUESS);
-        }
+    let navnInput = document.querySelector("#navn");
+    let lagreNavnKnapp = document.querySelector("#setNavn");
+    let sporeOmnavnContainer = document.querySelector("#sporreOmNavnContainer");
+    let gjetteContainer = document.querySelector("#gjetteContainer");
+    lagreNavnKnapp.addEventListener("click", lagreNavn);
+    let makeguessButton = document.querySelector("#makeguess")
+    makeguessButton.addEventListener("click", makeGuess)
+    let guess = document.querySelector("#guess")
+    let serverMsg = document.querySelector("#serverMsg")
+    let userName = null;
+    async function lagreNavn(ev){
+        userName = navnInput.value;
+        sporeOmnavnContainer.setAttribute("hidden",true);
+        let spillInfo = await fetch(/start/${userName});
+        spillInfo = await spillInfo.json()
+        visGjetting(spillInfo);
     }
-
-    function tryStart() {
-        let lang = languageSelect.value;
-
-        let id = checkUser(userin.value);
-        if(id) {
-            fetch(`/start/${id}`,
-                {
-                    headers: {
-                        'Content-type' : 'application/json',
-                        'accept-language' : lang
-                    }
-                }
-            ).then(resp => {
-                if(resp.ok) {
-                    resp.text().then(resp => {
-                        let answer = JSON.parse(resp);
-
-                        MIN = answer.min;
-                        MAX = answer.max;
-
-                        clearDiv(outDiv);
-                        writeOut(answer.users, userNr, 'div', true);
-                        writeOut(msgCache.INSTRUCTIONS, numDiv, 'h3', true);
-                        writeOut(`${MIN} - ${MAX}`, numDiv,'h3', false);
-
-                        if(answer.code === 2040) {
-                            writeOut(answer.msg, outDiv, 'h2', true);
-                        }
-
-                    })
-                }
-            });
-        }
-        else {
-            sendError(MSG_KEY.NO_NAME);
-        }
+    function visGjetting(spillInfo){
+        gjetteContainer.removeAttribute("hidden")
+        serverMsg.innerHTML = "Gjett nummeret mellom 0 - 100!"
     }
-
-    function checkUser(input) {
-        let output = input;
-        if(input) {
-            let whitespace = /\s/.test(input);
-            if(whitespace) {
-                let words = input.split(/\s/);
-                output = words.join('');
-            }
-            let slashes = /\//.test(output);
-            if(slashes) {
-                let words = output.split(/\//);
-                output = words.join('');
-            }
-            let questions = /\?/.test(output);
-            if(questions){
-                let words = output.split(/\?/);
-                output = words.join('');
-            }
-            let percent = /%/.test(output);
-            if(percent) {
-                let words = output.split(/%/);
-                output = words.join('');
-            }
-
-            if(!output) {
-                console.log("Valid usernames are filtered for whitespace, forward slashes, questions marks and percent signs.");
-                return null;
-            }
-
-            return output;
-        }
-        else {
-            return null;
-        }
+    async function makeGuess(){
+        let url = /guess/${userName}/${guess.value}
+        let serverInfo = await fetch(url,{"method":"POST"});
+        serverInfo = await serverInfo.json();
+        console.log(serverInfo)
+        serverMsg.innerHTML = serverInfo.msg
     }
-
-    function checkGuess(input) {
-        return input ? input : false;
-    }
-
-
-
-
-
-    function clearDiv(element) {
-        element.innerHTML = "";
-    }
-
-    function writeOut(message, target, size, clear) {
-        if(clear) {
-            clearDiv(target);
-        }
-
-        let elm = document.createElement(size);
-        elm.innerHTML = message;
-        target.appendChild(elm);
-    }
-
-    function hitEnter(evt) {
-        if(evt.keyCode === 13) {
-            tryGuess();
-        }
-    }
-
-    async function changeLang() {
-        let lang = languageSelect.value;
-
-        await fetch(`js/${lang}.json`).then (resp => {
-                return resp.json();
-            }
-        ).then(resp => {
-
-            msgCache = resp;
-
-        }).catch(error => {
-            console.error(`This language does not exist: ${error}`);
-            }
-        );
-
-        usertxt.innerHTML = msgCache.USERNAME;
-        guesstxt.innerHTML = msgCache.YOUR_GUESS;
-        playerstxt.innerHTML = msgCache.PLAYERS;
-        startbtn.innerHTML = msgCache.START;
-        guessbtn.innerHTML = msgCache.GUESS;
-    }
-
-
-    function sendError(code) {
-        writeOut(msgCache[code], outDiv, 'h2', true);
-    }
-
 </script>
 
 </html>
