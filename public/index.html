@@ -23,20 +23,26 @@
         let btnGuess = document.getElementById("btnGuess");
         let serverResponse = document.getElementById("serverResponse");
 
+        let selectedLanguage = "no";
+        let lettersNum = /^[a-z0-9]+$/i;
+
         btnStart.addEventListener("click", startGame);
         btnGuess.addEventListener("click", postGuess);
 
 
         function language(KEY) {
-
-            // Remember this function needs to do something.
+            selectedLanguage = KEY;
         }
 
         function startGame() {
             if (nameInput) {
                 const name = nameInput.value
-                if (name.length > 0) {
-                    fetch(`/start/${name}`).then(res => {
+                if (lettersNum.test(name) && name.length < 15) {
+                    fetch(`/start/${name}`, {
+                        headers: {
+                            "accept-language": selectedLanguage
+                        }
+                    }).then(res => {
                         if (res.ok) {
                             return res.json();
                         }
@@ -56,6 +62,9 @@
                 let guess = guessInput.value;
                 if (guess.length > 0) {
                     fetch(`/guess/${nameInput.value}/${guess}`, {
+                        headers: {
+                            "accept-language": selectedLanguage
+                        },
                         method: 'POST'
                     }).then(res => {
                         if (res.ok) {
