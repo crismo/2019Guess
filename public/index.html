@@ -4,37 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>Guess my number</title>
+    <script src="js/language.js"></script>
 </head>
 <body>
-
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
-
+    <a href='javascript:SetLanguage("en")'><img src="./img/en.png"/></a>
+    <a href='javascript:SetLanguage("no")'><img src="./img/no.png"/></a>
+    <a href='javascript:SetLanguage("ar")'><img src="./img/ar.png"/></a>
+    <a href='javascript:SetLanguage("bg")'><img src="./img/bg.png"/></a>
+    <a href='javascript:SetLanguage("de")'><img src="./img/de.png"/></a>
+    <a href='javascript:SetLanguage("fr")'><img src="./img/fr.png"/></a>
+    <a href='javascript:SetLanguage("ro")'><img src="./img/ro.png"/></a>
+    <template id="WelcomeScreen">
+        <p id="welcomeTitle"></p>
+        <input id="userName" type="text">
+        <button onclick="StartGame()">Start!</button>
+    </template>
+    <template id="GameScreen">
+        <p id="guessTitle"></p>
+        <input id="guess" type="number">
+        <p id="ServerResponse"></p>
+        <button onclick="MakeGuess()">Guess</button>
+    </template>
+    <div id="ContentMaster" class="ContentMaster"></div>
+    <script src="js/gamelogic.js"></script>
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
-        }
-
-        
-        
-    
+        const welcomeTitle = document.getElementById("welcomeTitle");
+        SetLanguage(language);
     </script>
-
 </body>
 </html>

@@ -58,7 +58,7 @@ app.post("/guess/:user/:number", (req, res) => {
 
 
     let user = req.params.user
-    if(uniqueUsers.indexOf(user) > -1){
+    if(uniqueUsers.indexOf(user) === -1){ //This added a user multiple times while it was "> -1", seems opposite to its intention
         uniqueUsers.push(user);
     }
 

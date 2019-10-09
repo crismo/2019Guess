@@ -1,0 +1,11 @@
+.ContentMaster {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+img {
+    height: 24px;
+    width: 24px;
+}
