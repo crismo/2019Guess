@@ -136,20 +136,22 @@
         let guess = document.getElementById("guess");
         let msg = document.getElementById("message");
         let btnStart = document.getElementById("btn");
-        let btnGuess = document.getElementById("btnGuess");
+        let btnGuess = document.getElementById("btnGuess");        
 
-        const name = nameInput.value;
+        let name;
 
         btnStart.addEventListener('click', function(evt){
-            if(!name || name.length > 50){
-                nameInput.style.border = "2px solid tomato";
-                console.log("username invalid");
-            }
-            
-            else{
+            name = nameInput.value;
+            let regex = /^[A-Za-z0-9]+([ _-]?[A-Za-z0-9])*$/;
+            if(regex.test(name)){
                 fetchStart();
+                nameInput.style.border = "0px black";
                 btnStart.style.display = "none";
                 btnGuess.style.display = "inline";
+            }
+            else{
+                nameInput.style.border = "2px solid tomato";
+                console.log("username invalid");
             }
         })
 
