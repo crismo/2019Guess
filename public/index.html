@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<htfgxjfgngfml lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,26 @@
     <title>Guess my number</title>
 </head>
 <body>
+    <div id="startContainer">
+        <p>HI! Welcome to the guess the number game!</p>
+        <label for="userName">Please type your name here</label>
+        <input id="userName" type="text">
+        <button id="Start" >Start</button>
+    </div>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <div id="guessContainer" hidden>
+        <label for="guessnumber">Guess the number here</label>
+        <input id="guessnumber" type="number" >
+        <button id="Guess" >Guess</button>  
+    </div>
+    <div id="serverMsg">
+        <span id="serverMsg"></span>
+    </div>
+
+    <div id="startOverContainer" hidden>
+        <button id="StartOver" >Start over?</button>
+    </div>
+    
 
     <script>
     
@@ -18,20 +34,57 @@
             // Remember this function needs to do something.
         }
         const nameInput = document.getElementById("userName");
+        const guessInput = document.getElementById("guessnumber");
+        const serverMsg = document.getElementById("serverMsg");
 
+        let name
+        let startBt = document.querySelector("#Start")
+        startBt.addEventListener('click', function(evt){
+        
         if(nameInput){
-            const name = nameInput.value
+            name = nameInput.value
             if(name.length > 0){
                 fetch(`/start/${name}`).then(resp =>{
                 if(resp.ok){
-                    resp.body.json()
+                    return resp.json()
                 }}).then(json => {
-
+                    console.log(json)
+                    let guess = document.querySelector("#guessnumber")
+                    guessContainer.removeAttribute("hidden")
+                    startContainer.setAttribute("hidden",true)
                 });
             }
         }
+    });
 
+        let guessBt = document.querySelector("#Guess")
+        guessBt.addEventListener('click', function(evt){
+
+            let guess = guessInput.value;
+            fetch(`/guess/${name}/${guess}`,{"method":"POST", "headers":{"accept-language":"en"}}).then(resp =>{
+                if(resp.ok){
+                    return resp.json()
+                }}).then(json => {
+                    console.log(json)
+                    serverMsg.innerHTML = json.msg;
+
+                    if (json.msg === "You guessed correctly ! Game over."){
+                        guessContainer.setAttribute("hidden",true)
+                        startOverContainer.removeAttribute("hidden")
+                    }
+                   
+                });
+            
+    });
         
+
+    // Start på nytt funksjon 
+    let startOverBt = document.querySelector("#StartOver")
+        startOverBt.addEventListener('click', function(evt){
+            startContainer.removeAttribute("hidden")
+            serverMsg.setAttribute("hidden",true)
+            startOverContainer.setAttribute("hidden",true)
+        });
         
     
     </script>
