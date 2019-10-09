@@ -7,28 +7,72 @@
     <title>Guess my number</title>
 </head>
 <body>
-
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <select id="languageInput">
+        <option value="en">English</option>
+        <option value="no">Norsk</option>
+        <option value="ro">Ro</option>
+        <option value="fr">French</option>
+        <option value="ar">Ar</option>
+        <option value="de">German</option>
+        <option value="bg">Russian</option>
+        <option value="sa">Sa</option>
+    </select>
+    <div>Username: </div><input id="nameInput" type="text">
+    <div>Number: </div><input id="numberInput" type="number">
+    <br>
+    <button id="start">Start</button>
+    <button id="guess">Guess</button>
+    <h2 id="h2">Type a name and press guess to start</h2>
 
     <script>
-    
+
+        document.getElementById("guess").addEventListener("click", function(){
+            guess();
+        });
+        document.getElementById("start").addEventListener("click", function(){
+            start();
+        });
+
         function language(KEY){
             // Remember this function needs to do something.
         }
-        const nameInput = document.getElementById("userName");
+        const nameInput = document.getElementById("nameInput");
+        const numberInput = document.getElementById("numberInput");
+        const languageInput = document.getElementById("languageInput");
+        const h2 = document.getElementById("h2");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+        function start(){
+            fetch(`/start/${nameInput.value}`)
+            .then(function (data) {  
+            data.json().then(function(parsed){
+                h2.innerHTML = `The number is between ${parsed.min} and ${parsed.max}`;
+            });
+            })  
+            .catch(function (error) {  
+            console.log('Request failure: ', error);  
+            });
+        }
 
-                });
-            }
+        function guess(){
+            fetch(`/guess/${nameInput.value}/${numberInput.value}`, {  
+                method: 'POST',  
+                headers: {  
+                'Accept-Language': languageInput.value  
+                }
+            })
+            .then(function (data) {  
+            data.json().then(function(parsed){
+                gameRound(parsed)
+            });
+            })  
+            .catch(function (error) {  
+            console.log('Request failure: ', error);  
+            });
+        }
+
+        function gameRound(object){
+            h2.innerHTML = object.msg;
+            
         }
 
         
