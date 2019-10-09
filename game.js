@@ -57,6 +57,10 @@ app.get("/start/:user", function (req, response) {
     response.json({code: HTTP_CODES.OK, min: MIN, max: MAX, users: uniqueUsers.size});
 });
 
+app.get("/", function(req, response) {
+    response.sendFile(path.join("public" + "/index.html"));
+  });
+
 app.post("/guess/:user/:number", (req, res) => {
     uniqueUsers.add(req.params.user);
 
