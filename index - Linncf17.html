@@ -1,0 +1,63 @@
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title>Guess my number</title> 
+  
+    <style> 
+        html { 
+    font-family: sans-serif; 
+    } 
+      
+        body { 
+    width: 50%; 
+    max-width: 800px; 
+    min-width: 480px; 
+    margin: 0 auto; 
+    } 
+    </style> 
+</head> 
+  
+<body> 
+<h1>Guess My Number</h1> 
+  
+<p>Guess a number between 1 and 100</p> 
+  
+<div class="form"> 
+    <label for="guessField">Enter your guess: </label> 
+    <input type = "text" id = "guessField" class = "guessField"> 
+    <input type = "submit" value = "Submit guess" 
+           class = "guessSubmit" id = "submitguess"> 
+</div> 
+  
+<script type = "text/javascript"> 
+  
+     
+    var y = Math.floor(Math.random() * 100 + 1); 
+      
+    
+        var guess = 1; 
+      
+    document.getElementById("submitguess").onclick = function(){ 
+      
+       
+   var x = document.getElementById("guessField").value; 
+  
+   if(x == y) 
+   {     
+       alert("Correct! "
+               + guess + " GUESS "); 
+   } 
+   else if(x > y) 
+   {     
+       guess++; 
+       alert("Try smaller"); 
+   } 
+   else
+   { 
+       guess++; 
+       alert("Try bigger") 
+   } 
+} 
+</script> 
+</body> 
+</html>   
