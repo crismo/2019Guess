@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>My document</title>
+</head>
+<body>
+    <canvas id= "myCanvas" width="600" height="200" style="border:1px solid #d3d3d3;"></canvas>
+
+    <div>
+        <button id="btn1">Number of circles</button>
+    </div>
+    
+    <input id="inp1" type="text" />
+    <h2 id="txt1"></h2>
+    
+</body>
+
+<script>
+
+
+
+    let inp1 = document.getElementById('inp1');
+    let btn1 = document.getElementById('btn1');
+    let txt1 = document.getElementById('txt1');
+
+    btn1.addEventListener('click', function(evt) {        
+      
+
+    var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+      var radius = 20;
+
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.fillStyle = 'green';
+      context.fill();
+      context.lineWidth = 5;
+      context.strokeStyle = '#003300';
+      context.stroke();    
+      txt1.innerHTML = txt1.value=sum;
+    });
+
+</script>
+
+</html>
