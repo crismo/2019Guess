@@ -116,7 +116,7 @@
             <input id="guess" type="number">
         </div>
         <div class="buttonClass">
-            <button id="btn">Guess!</button>
+            <button id="btn">Start</button>
             <button id="btnGuess">Guess!</button>
         </div>
         <div class="responseClass">
@@ -142,11 +142,10 @@
 
         btnStart.addEventListener('click', function(evt){
             if(!name || name.length > 50){
-                msg.innerHTML = "Username not valid!";
+                nameInput.style.border = "2px solid tomato";
+                console.log("username invalid");
             }
-            else if(!guess.value || guess.value < 0 || guess.value > 100){
-                msg.innerHTML = "Please insert a number between 0 and 100";
-            }
+            
             else{
                 fetchStart();
                 btnStart.style.display = "none";
@@ -160,14 +159,24 @@
 
         //----------------------
         function fetchStart(){
-            fetch(`/start/${name}`)
+            
+            let cfg = {
+                method: "GET",
+                headers: {"Content-Type" : "application/json",
+                            "accept-language" : "en"}
+            }
+
+            fetch(`/start/${name}`,cfg)
             .then(resp =>{
                 if(resp.ok){
-                    resp.json()
+                    return resp.json();
                 }
             })
-            .then(function(){
-                msg.innerHTML = `Guess a number between 0 and 100`;
+            .then(function(json){
+                msg.innerHTML = `Guess a number between ${json.min} and ${json.max}`;
+            })
+            .catch(error =>{
+                throw(error);
             })
         }
         
@@ -177,20 +186,23 @@
                 guess: guess.value
             }
 
-            let config = {
+            let cfg = {
                 method: "POST",
-                headers: {"Content-Type" : "application/json"},
-                body: JSON.stringify(data)
+                headers: {"Content-Type" : "application/json",
+                            "accept-language" : "en"}
             }
             
-            fetch(`guess/${name}/${guess.value}`,config)
+            fetch(`guess/${name}/${guess.value}`,cfg)
             .then(resp =>{
                 if(resp.ok){
-                    resp.json();
+                    return resp.json();
                 }
             })
-            .then(json => {
-
+            .then(function(json){
+                msg.innerHTML = json.msg;
+            })
+            .catch(error =>{
+                throw(error);
             })
         }
         
