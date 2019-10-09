@@ -5,36 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <style>
+            .item1 { grid-area: header; }
+            .item2 { grid-area: menu; }
+            .item3 { grid-area: main; }
+            .item4 { grid-area: right; }
+            .item5 { grid-area: footer; }
+            
+            .grid-container {
+              display: grid;
+              grid-template-areas:
+                'header header header header header header'
+                'menu main main main right right'
+                'menu footer footer footer footer footer';
+              grid-gap: 10px;
+              background-color: lightskyblue;
+              padding: 10px;
+            }
+            
+            .grid-container > div {
+              background-color: rgba(255, 255, 255, 0.8);
+              text-align: center;
+              padding: 20px 0;
+              font-size: 30px;
+            }
+            </style>
 </head>
 <body>
-
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+        <div class="grid-container">
+                <div class="item1"></span><h2 id="header">Welcome to the GUESS MY NUMBER game!<br/><span style="font-size:20px">Enter a username to start!</h2></div>
+                <div class="item2"><select id="accept-language">
+                        <option value="en">English</option>
+                        <option value="no">Norsk</option>
+                        <option value="ro">Română</option>
+                        <option value="fr">français</option>
+                        <option value="ar">العربية</option>
+                        <option value="de">Deutsch</option>
+                        <option value="bg">български език</option>
+                        <option value="sa">संस्कृतम्</option>
+                    </select></div>
+                <div class="item3">
+                    <input id="userName" type="text">
+                    <input id="guessInpt"  type="number" hidden>
+                </div>  
+                <div id = "item4"class="item4"> 
+                    <button id="start">Start</button>
+                    <button id="guessBtn" hidden>Guess</button>
+                    
+                    </div>
+                <div class="item5"><p id="response"></p></div>
+              </div>
 
     <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+        let guessBtn = document.getElementById("guessBtn")
+        let userName = document.getElementById("userName")
+        let start = document.getElementById("start")
+        let guessInpt = document.getElementById("guessInpt")
+        let accept_language = document.getElementById("accept-language")
+        let mintext = document.getElementById("min")
+        let maxtext = document.getElementById("max")
+        let headertext = document.getElementById("header")
+        let responsetext = document.getElementById("response")
+        let min;
+        let max;
+       
+        start.addEventListener('click', function(evt) {
+            const nameInput = document.getElementById("userName").value
+            if(nameInput){
+                const name = nameInput
+                if(name.length > 0){
 
-                });
+                    fetch('/start/'+name).then(function(response) {
+                    response.json().then(function(parsedJson) {
+                    min = parsedJson.min;
+                    max = parsedJson.max;
+                    console.log(max);
+                    document.getElementById("header").innerHTML = "The number is between "+min+" and "+ max
+                    start.style.display = "none"
+                    userName.style.display = "none"
+                    guessBtn.style.display = "inline";
+                    guessInpt.style.display = "inline";
+                    responsetext.innerHTML=""
+                    document.getElementById("guessInpt").value = null
+
+
+                        })
+                    })
+                }
             }
-        }
-
         
-        
-    
+            
+        })
+        guessBtn.addEventListener('click', function(evt) {
+            const nameInputGuess = document.getElementById("userName").value
+            const langtest = accept_language.value
+            const numberInput = document.getElementById("guessInpt").value
+            if(nameInputGuess&&numberInput){
+            
+            if(nameInputGuess.length > 0 && numberInput.length > 0){
+            fetch("/guess/"+nameInputGuess+"/"+parseInt(numberInput), {  
+                method: 'POST',
+                headers:{"Accept-Language": langtest} 
+            })
+            .then(function(response) {
+                response.json().then(function(parsedJson) {
+                responsetext.innerHTML = parsedJson.msg;
+                if(parsedJson.code === 2000){
+                    document.getElementById("header").innerHTML="Press the start button to play again"
+                    start.style.display = "inline"
+                    userName.style.display = "inline"
+                    guessBtn.style.display = "none"
+                    guessInpt.style.display = "none";
+                }
+                console.log(parsedJson)
+                    })
+                })
+                }
+            }
+        })
     </script>
-
 </body>
 </html>
