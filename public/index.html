@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Guess my number</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+  <body>
+    <input id="username" type="text" />
 
-    <script>
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
-        const nameInput = document.getElementById("userName");
+    <button id="start">Start</button>
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
+    <h2 id="responsefromGET"></h2>
 
-                });
-            }
-        }
+    <input id="numbertoguess" type="text" />
+    <button id="sendPOST">guess</button>
 
-        
-        
-    
-    </script>
+    <h2 id="ResponsefromPOST"></h2>
+  </body>
 
-</body>
+  <script>
+    let url = "http://localhost:8000/";
+
+    const headers = {
+      "Content-type": "application/json",
+      "accept-language": "ar"
+    };
+
+    // const response = fetch('http://localhost:8000/start/amro');
+
+    let username = document.getElementById("username");
+    let start = document.getElementById("start");
+    let myhget = document.getElementById("responsefromGET");
+    let numbertoguess = document.getElementById("numbertoguess");
+    let guessbutton = document.getElementById("sendPOST");
+    let myhpostresponse = document.getElementById("ResponsefromPOST");
+
+    start.addEventListener("click", function() {
+      fetch(`${url}start/${username.value}`, {})
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          myhget.innerHTML =
+            "You have to guess a number between " +
+            data.min +
+            " and " +
+            data.max;
+        })
+        .catch(error => console.error(error));
+    });
+
+    guessbutton.addEventListener("click", function() {
+      let myanswer = numbertoguess.value;
+
+      fetch(`${url}guess/${username.value}/${myanswer}`, {
+        method: "POST",
+        headers: headers
+      })
+        .then(data => {
+          return data.json();
+        })
+        .then(
+          json => console.log(json.msg),
+          (myhpostresponse.innerHTML = json.msg)
+        )
+        .catch(error => console.error(error));
+    });
+  </script>
 </html>
