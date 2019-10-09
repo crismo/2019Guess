@@ -11,16 +11,11 @@
 
     <input id="userName" type="text">
     <input id="guess" type="number">
-    <button id="btn">Guess</button>
     <button id = "btn2">Start</button>
+    <button id="btn">Guess</button>
     <p id= "serverResponce"></p>
 
     <script>
-
-    
-        function language(KEY){
-            // Remember this function needs to do something.
-        }
         const nameInput = document.getElementById("userName");
         let guessBtn = document.getElementById ("btn");
         let guessInput = document.getElementById ("guess");
@@ -39,8 +34,7 @@ function startGame() {
                 if(resp.ok){
                     return resp.json()
                 }}).then(json => {
-                    serverResponce.innerHTML = `${json.min} - ${json.max} ------------------------------^`;
-                    console.log(json)
+                    serverResponce.innerHTML = json.msg;
                 });
             }
         }

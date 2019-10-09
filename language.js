@@ -1,9 +1,11 @@
 module.exports = function() {
   //i18n l10n
+  // Legg til forskjellige språk
   const DEFAULT_LANGUAGE = "en";
 
   const TEXTS = {
     en: {
+      STARTED: "Choose a number between 1 and 100",
       NOT_STARTED: "Game not started. Go to /start",
       WIN: "You guessed correctly ! Game over.",
       LOWER: "The number is bigger, try again!",
@@ -11,6 +13,7 @@ module.exports = function() {
       OVER: "The game is already over, too bad."
     },
     no: {
+      STARTED: "Velg et tall mellom 1 og 100",
       NOT_STARTED: "Ikke noe pågående spill. Gå til /start",
       WIN: "Du gjettet riktig! Game over.",
       LOWER: "Tallet er større, prøv på nytt!",
@@ -25,6 +28,7 @@ module.exports = function() {
       OVER: "Jocul s-a terminat deja."
     },
     fr: {
+      STARTED: "sélectionnez un nombre entre 1 et 100",
       NOT_STARTED: "La partie n'a pas commence. Allez a /start",
       WIN: "Vous avez deviné correctement! Fin de la partie.",
       LOWER: "Le nombre est plus grand, reessaie!",
