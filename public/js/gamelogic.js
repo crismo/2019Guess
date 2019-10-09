@@ -13,10 +13,12 @@ function StartGame() {
             if(resp.ok){
                 resp.json().then(json => {
                     console.log(json);
+                    const guessTitle = document.getElementById("guessTitle");
                     var temp = document.getElementById("GameScreen");
                     var clon = temp.content.cloneNode(true);
                     ContentMaster.innerHTML = "";
                     ContentMaster.appendChild(clon);
+                    SetLanguage(language);
                 });
             }});
         }
