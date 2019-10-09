@@ -1,5 +1,5 @@
 module.exports = function() {
-  //i18n l10n
+
   const DEFAULT_LANGUAGE = "en";
 
   const TEXTS = {
@@ -66,28 +66,17 @@ module.exports = function() {
 };
 
   return function getClientLang(req, res, next) {
-    let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
 
-    language = language.split(",")[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
-
-    let languages = Object.keys(TEXTS); // ["en","no"]
-    if (!languages.indexOf(language)) {
-      language = DEFAULT_LANGUAGE;
-    }
-
-    //------
-    req.language = function(key) {
-      let value = TEXTS[language][key];
+    
+    req.language = function(lan,key) {
+      let value = TEXTS[lan][key];
       if (!value) {
         value = TEXTS[DEFAULT_LANGUAGE][key];
-        console.error(
-          `Person that wrote the ${language} made a mistake with key ${key}`
-        );
       }
 
       return value;
     };
-    //------
+
 
     next();
   };

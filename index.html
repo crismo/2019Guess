@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial scale=1.0">
+    <meta http-equiv="X-UA-Comaptible" content="ie=edge">
+    <title>Guess my number</title>
+</head>
+<body>
+<h1>Guess the number</h1>
+<input id="userName" type="text" placeholder="Username">
+<input id="guess" type="number" placeholder="Guessnumber">
+<button onclick="onbuttonpress()">Guess</button>
+<select id="lang">
+  <option value="en">En</option>
+  <option value="no">No</option>
+  <option value="ro">Ro</option>
+  <option value="fr">Fr</option>
+  <option value="ar">Ar</option>
+  <option value="de">De</option>
+  <option value="bg">Bg</option>
+  <option value="sa">Sampi</option>
+</select>
+<div id="feedback">
+Your result will come here.
+</div>
+</body>
+
+
+
+
+<script>
+
+    function language(KEY){
+    }
+    const langInput = document.getElementById("lang");
+        const nameInput = document.getElementById("userName");
+        const guessInput = document.getElementById("guess");
+function onbuttonpress(){
+    if(nameInput){
+        const name = nameInput.value;
+        if(name.length > 0){
+            fetch(`/start/${name}}`).then(resp =>{
+            if(resp.ok){
+otherfunction(name);
+            }});
+        }
+    }
+}
+ async function otherfunction(name){
+  if(guessInput){
+    const guess = guessInput.value;
+    const langu = lang.value;
+    if(guess.length > 0){
+        fetch(`/guess/${name}/${guess}/${langu}`).then(resp =>{
+        if(resp.ok){
+let system = resp.json();
+nextfunction(system);
+        }});
+    }
+}
+
+}
+
+
+
+async function nextfunction(a){
+
+let svar = eval(await a);
+let spørring = svar.msg;
+document.getElementById("feedback").innerHTML = spørring;
+
+}
+</script>
+</html>
