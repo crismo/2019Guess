@@ -5,35 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Guess my number</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+        <div class="container">
+                <div id="title">
+                    <h1>Guess my Number Game</h1>
+                    <p>for MM220 2019</p>
+                </div>
+                <div id="cred">
+                    <div id="userVisible"></div>
+                    <template id="userTemp">
+                        <div id="userHidden">
+                           <label id="label1" for="userName"><bold>Your User-Name: </bold></label><input id="userName" type="text"><br>
+                            <button id="button1">Enter</button> 
+                        </div>
+                    </template>
+                    <div id="guessVisible"></div>
+                    <template id="guessTemp">
+                        <div id="guessHidden">
+                            <label id="label2" for="guess"><bold>Your Guess: </bold></label><input id="guess" type="text"><br>
+                            <button id="button2">Guess!</button>
+                        </div>
+                    </template>
+                    
+                </div>
+                <div id="action">
+                    <h2 id="responseAction"></h2>
+                </div>
+                <div id="code">
+                    <p id="currentPlayer">Current Players: </p>
+                    <p id="responseCode"></p>    
+                </div>
+        
+            </div>
 
     <script>
-    
+        const lang = "en";
+        let cred = document.getElementById("cred");
+        let res = document.getElementById("responseAction");
+        let resCode = document.getElementById("responseCode");
+        let curPlayers = document.getElementById("currentPlayer");
+
+
+        
+        function showUserTemp(){
+            let temp = document.getElementById('userTemp');
+            let placement = document.getElementById('userVisible');
+            let clonedTemp = temp.content.cloneNode(true); 
+            placement.appendChild(clonedTemp);
+            let button1 = document.getElementById("button1");
+            let nameInput = document.getElementById("userName");
+            button1.addEventListener("click", function(evt){
+            userName = nameInput.value;
+
+            if(nameCheck(userName)){
+                showGuessTemp();
+                get(userName);
+
+            }   
+            
+        });
+
+        }
+        function showGuessTemp(){
+            let temp = document.getElementById('guessTemp');
+            let placement = document.getElementById('guessVisible');
+            let clonedTemp = temp.content.cloneNode(true); 
+            placement.appendChild(clonedTemp);
+            let button2 = document.getElementById("button2");
+            let guessInput = document.getElementById("guess")
+            button2.addEventListener("click", function(evt){
+                guess = guessInput.value;
+                if(guess){
+                    post(userName, guess);    
+                }   
+            
+            });
+        }
+
         function language(KEY){
-            // Remember this function needs to do something.
+            //Only speaks in English so far   
         }
-        const nameInput = document.getElementById("userName");
 
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
+        function nameCheck(userName){
+            
+            let regex = /[^\d][a-zA-Z]{1,15}[^\d]/;
+            let regexTst = regex.test(userName);
+            if(regexTst){
+                res.innerText = "";
+                return true;
+            }else if(userName.length > 15){
+                res.innerText = `Your name is too long, please try again.`;
+            }else{
+                res.innerText = `${userName} is not a proper name, please try again.`;
             }
-        }
-
-        
-        
+            
+        };
     
+        async function get(userName){
+           
+            let head = {
+                "Content-type":"application/json",
+                "accept-language": lang
+            };
+            let cfg = {
+                method: 'GET',
+                headers: head
+            };
+            let url = `start/${userName}/`;
+            try{
+                let resp = await fetch(url, cfg);
+                let data = await resp.json();
+                resCode.innerText = `Guess my number between ${data.min} and ${data.max}`;
+
+            }
+            catch(err){
+                console.log(err);
+            } 
+        }
+        async function post(userName, guess){
+            let head = {
+                "Content-type":"application/json",
+                "accept-language": lang
+            };
+            let cfg = {
+                method: 'POST',
+                headers: head
+            };
+            let url = `guess/${userName}/${guess}/`;
+            try{
+                let resp = await fetch(url, cfg);
+                let data = await resp.json();
+                resCode.innerText = data.msg;
+                curPlayers.innerText = `Current Players: ${data.users}`;
+            }
+            catch(err){
+                console.log(err);
+            } 
+        }
+        
+        
+        showUserTemp();
+        
     </script>
 
 </body>
