@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Guess my number</title>
+    <link rel="stylesheet" type="text/css" href="./css/client.css">
+</head>
+<body>
+ <div id="sporreOmNavnContainer">
+    <input type="text" id="navn">
+    <button id="setNavn" >Lagre navn</button>
+ </div>
+
+ <div id="gjetteContainer" hidden >
+    <input type="number" id="guess">
+    <button id="makeguess" >Guess</button>
+    <span id="serverMsg">
+
+    </span>
+ </div>
+
+<script>
+
+let navnInput = document.querySelector("#navn");
+let lagreNavnKnapp = document.querySelector("#setNavn");
+let sporeOmnavnContainer = document.querySelector("#sporreOmNavnContainer");
+let gjetteContainer = document.querySelector("#gjetteContainer");
+lagreNavnKnapp.addEventListener("click", lagreNavn);
+
+let makeguessButton = document.querySelector("#makeguess")
+makeguessButton.addEventListener("click", makeGuess)
+let guess = document.querySelector("#guess")
+
+let serverMsg = document.querySelector("#serverMsg")
+
+let userName = null;
+
+
+async function lagreNavn(ev){
+    userName = navnInput.value;
+    sporeOmnavnContainer.setAttribute("hidden",true);
+
+    let spillInfo = await fetch(/start/${userName});
+    spillInfo = await spillInfo.json()
+    visGjetting(spillInfo);
+}
+
+function visGjetting(spillInfo){
+    gjetteContainer.removeAttribute("hidden")
+    serverMsg.innerHTML = "Gjett nummeret mellom 0 - 100!"
+
+}
+
+async function makeGuess(){
+
+    let url = /guess/${userName}/${guess.value}
+
+    let serverInfo = await fetch(url,{"method":"POST"});
+    serverInfo = await serverInfo.json();
+
+    console.log(serverInfo)
+    serverMsg.innerHTML = serverInfo.msg
+
+}
+
+</script>
+
+</html>
