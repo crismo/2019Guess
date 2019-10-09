@@ -1,71 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-  </head>
 
-  <body>
-    <input id="username" type="text" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+</head>
 
-    <button id="start">Start</button>
+<body>
+  <input id="username" type="text" />
 
-    <h2 id="responsefromGET"></h2>
+  <button id="start">Start</button>
 
-    <input id="numbertoguess" type="text" />
-    <button id="sendPOST">guess</button>
+  <h2 id="responsefromGET"></h2>
 
-    <h2 id="ResponsefromPOST"></h2>
-  </body>
+  <input id="numbertoguess" type="text" />
+  <button id="sendPOST">guess</button>
 
-  <script>
-    let url = "http://localhost:8000/";
+  <h2 id="ResponsefromPOST"></h2>
+</body>
 
-    const headers = {
-      "Content-type": "application/json",
-      "accept-language": "ar"
-    };
+<script>
+  const URL = "http://localhost:8000/";
 
-    // const response = fetch('http://localhost:8000/start/amro');
+  const headers = {
+    "Content-type": "application/json",
+    "accept-language": "en"
+  };
 
-    let username = document.getElementById("username");
-    let start = document.getElementById("start");
-    let myhget = document.getElementById("responsefromGET");
-    let numbertoguess = document.getElementById("numbertoguess");
-    let guessbutton = document.getElementById("sendPOST");
-    let myhpostresponse = document.getElementById("ResponsefromPOST");
+  let username = document.getElementById("username");
+  let start = document.getElementById("start");
+  let myhget = document.getElementById("responsefromGET");
+  let numbertoguess = document.getElementById("numbertoguess");
+  let guessbutton = document.getElementById("sendPOST");
+  let myhpostresponse = document.getElementById("ResponsefromPOST");
+  let saveuser;
 
-    start.addEventListener("click", function() {
-      fetch(`${url}start/${username.value}`, {})
+
+
+  start.addEventListener("click", function () {
+
+    if (username.value) {
+
+      fetch(`${URL}start/${username.value}`)
         .then(response => response.json())
         .then(data => {
-          console.log(data);
-          myhget.innerHTML =
-            "You have to guess a number between " +
-            data.min +
-            " and " +
-            data.max;
+          console.log(data); myhget.innerHTML = `You have to guess a number between ${data.min} and ${data.max}`
         })
         .catch(error => console.error(error));
-    });
 
-    guessbutton.addEventListener("click", function() {
-      let myanswer = numbertoguess.value;
+      saveuser = username.value;
+    }
+    else {
+      alert("Please choose a username!");
+    }
+  });
 
-      fetch(`${url}guess/${username.value}/${myanswer}`, {
+  guessbutton.addEventListener("click", function () {
+
+    if (saveuser) {
+      fetch(`${URL}guess/${saveuser}/${numbertoguess.value}`, {
         method: "POST",
         headers: headers
       })
-        .then(data => {
-          return data.json();
-        })
-        .then(
-          json => console.log(json.msg),
-          (myhpostresponse.innerHTML = json.msg)
-        )
+        .then(data => { return data.json() })
+        .then(json => { console.log(json.msg); myhpostresponse.innerHTML = json.msg; })
         .catch(error => console.error(error));
-    });
-  </script>
+    }
+    else {
+      alert("I can't find an existing user, please choose your username and hit start!")
+    }
+
+  });
+
+
+
+
+
+</script>
+
 </html>
