@@ -4,6 +4,7 @@ module.exports = function() {
 
   const TEXTS = {
     en: {
+      GAME_STARTED: "The game is now started, guess a number",
       NOT_STARTED: "Game not started. Go to /start",
       WIN: "You guessed correctly ! Game over.",
       LOWER: "The number is bigger, try again!",
@@ -11,6 +12,7 @@ module.exports = function() {
       OVER: "The game is already over, too bad."
     },
     no: {
+      GAME_STARTED: "Spillet har nå startet, tipp et nummer",
       NOT_STARTED: "Ikke noe pågående spill. Gå til /start",
       WIN: "Du gjettet riktig! Game over.",
       LOWER: "Tallet er større, prøv på nytt!",
@@ -18,6 +20,7 @@ module.exports = function() {
       OVER: "Spillet er allerede over."
     },
     ro: {
+      GAME_STARTED: "Jocul a început. Vă rugăm să ghiciți valoarea.",
       NOT_STARTED: "Jocul nu a început. Mergi la /start",
       WIN: "Corect! Jocul s-a terminat",
       LOWER: "Numărul este mai mare, încearcă din nou!",
@@ -25,6 +28,7 @@ module.exports = function() {
       OVER: "Jocul s-a terminat deja."
     },
     fr: {
+      GAME_STARTED: "Le jeu a commencé. S'il vous plaît devinez la valeur.",
       NOT_STARTED: "La partie n'a pas commence. Allez a /start",
       WIN: "Vous avez deviné correctement! Fin de la partie.",
       LOWER: "Le nombre est plus grand, reessaie!",
@@ -32,6 +36,7 @@ module.exports = function() {
       OVER: "La partie est deja terminee, dommage."
     },
     ar: {
+      GAME_STARTED: "بدأت اللعبة. يرجى تخمين القيمة.",
       NOT_STARTED: "/start لم تبدا اللعبه, اذهب الى",
       WIN: ".لقد حزرت الرقم الصحيح. انتهت اللعبه",
       LOWER: "!الرقم اكبر, حاول مره ثانيه",
@@ -40,6 +45,7 @@ module.exports = function() {
     },
 
       de: {
+      GAME_STARTED: "Spiel gestartet. Bitte rate den Wert.",
       NOT_STARTED: "Das Spiel hat noch nicht begonnen. Gehe zu /start",
       WIN:"Richtig geraten! Das Spiel ist beendet.",
       LOWER:"Die Zahl ist grösser, versuche noch einmal!",
@@ -48,6 +54,7 @@ module.exports = function() {
     },
 
     bg: {
+      GAME_STARTED: "Играта е стартирана, познайте число",
       NOT_STARTED: "Играта не е започнала. Отиди до /start",
       WIN: "Ти позна правилния отговор! Край на играта.",
       LOWER: "Числото е по-голямо, опитай пак!",
@@ -55,6 +62,7 @@ module.exports = function() {
       OVER: "Играта вече приключи, жалко."
     },
     sa:{
+      GAME_STARTED: "Google can't even recognize this laguage, sorry. lol.",
       NOT_STARTED:"Speallu ii leat álgán. Mana /start.",
       WIN: "Don leat árvidan riekta! Speallu lea geargan.",
       LOWER:"Du lohku lea stoarrát, geahčal oktii vel!",

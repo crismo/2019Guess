@@ -7,31 +7,86 @@
     <title>Guess my number</title>
 </head>
 <body>
+    <label id="label">Language:</label>
+    <select onchange="selectedL()" id="languages">
+        <option value="choose">choose</option>
+        <option value="en">en</option>
+        <option value="no">no</option>
+        <option value="ro">ro</option>
+        <option value="fr">ar</option>
+        <option value="ar">ar</option>
+        <option value="de">de</option>
+        <option value="bg">bg</option>
+        <option value="sa">sa</option>
+    </select>
 
-    <input id="userName" type="text">
-    <input id="guess" type="number">
-    <button>Guess</button>
+    <input hidden placeholder="name" id="userName" type="text">
+    <button hidden id="start">Start</button>
+    <input hidden id="guessValue" type="number">
+    <button hidden id="guessbtn">Guess</button>
+    <p id="text"></p>
 
     <script>
-    
+    let userName = document.getElementById("userName");
+    let startGame = document.getElementById("start");
+    let guessValue = document.getElementById("guessValue");
+    let guessbtn = document.getElementById("guessbtn");
+    let text = document.getElementById("text");
+    let languages = document.getElementById("languages");
+    let selectedLan = null;
+    let label = document.getElementById("label");
+
+    startGame.addEventListener("click", function(){
+        guessValue.hidden = false;
+        guessbtn.hidden = false;
+        userName.hidden = true;
+        startGame.hidden = true;
+
+        if(userName){
+            const name = userName.value;
+            if(name.length > 0){
+                fetch(`/start/${name}`,{
+                    headers: {"accept-language": `${selectedLan}`}
+                }).then(resp =>{
+                if(resp.ok){
+                    return resp.json();
+                }}).then(json => {
+                    text.innerHTML = json.msg;
+                });
+            }
+        }
+    });
+
+    guessbtn.addEventListener("click", function(){
+        if(guessValue){
+            let guess = guessValue.value;
+            if(guess.length > 0){
+                fetch(`/guess/${userName.value}/${guess}`,{
+                    method:"POST",
+                    headers: {"accept-language": `${selectedLan}`}
+                }).then(resp =>{
+                if(resp.ok){
+                    return resp.json();
+                }}).then(json => {
+                    text.innerHTML = json.msg;
+                });
+            }
+        }
+    });
+
         function language(KEY){
             // Remember this function needs to do something.
         }
         const nameInput = document.getElementById("userName");
-
-        if(nameInput){
-            const name = nameInput.value
-            if(name.length > 0){
-                fetch(`/start/${name}`).then(resp =>{
-                if(resp.ok){
-                    resp.body.json()
-                }}).then(json => {
-
-                });
-            }
+        
+        function selectedL(){
+            selectedLan = languages.value;
+            label.hidden = true;
+            languages.hidden = true;
+            userName.hidden = false;
+            startGame.hidden = false;
         }
-    
-    </script>
 
+    </script>
 </body>
 </html>
