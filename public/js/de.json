@@ -1,0 +1,11 @@
+
+{
+"NO_NAME": "Du must einen Namen angeben!",
+"NO_GUESS": "Du musst eine Zahl auswählen!",
+"START": "Neues Spiel starten" ,
+"GUESS": "Rate!",
+"USERNAME": "Nutzer:",
+"YOUR_GUESS": "Deine Zahl:",
+"PLAYERS": "Spieler:",
+"INSTRUCTIONS": "Rate meine Zahl zwischen diesen zwei:"
+}

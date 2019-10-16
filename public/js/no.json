@@ -1,0 +1,11 @@
+
+{
+  "NO_NAME": "Du må angi et brukernavn!",
+  "NO_GUESS": "Du må velge et tall!",
+  "START": "Start nytt spill" ,
+  "GUESS": "Gjett!",
+  "USERNAME": "Brukernavn:",
+  "YOUR_GUESS": "Ditt tall:",
+  "PLAYERS": "Spillere:",
+  "INSTRUCTIONS": "Gjett tallet mitt mellom disse to:"
+}
