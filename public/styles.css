@@ -1,0 +1,86 @@
+body{
+    background-color: gray;
+}
+h1,h2,h3,p,label{
+    color: beige;
+    font-family: 'Cambria', serif;
+}
+.container{
+    display: grid;
+    height: 50vh;
+    grid-template-areas: 
+                        "r1" "c1" "l1"
+                        "r2" "c2" "l2"
+                        "r3" "c3" "l3";
+    
+    justify-content: center;
+}
+.container>#cred{
+    grid-area: "c1";
+    padding: 20px;
+
+}
+.container>#title{
+    grid-area: "r2";
+    padding: 20px;
+}
+.container>#title>p{
+    font-style: italic;
+    text-align: center;
+}
+.container>#action{
+    grid-area: "c2";
+    padding: 20px;
+}
+#cred{
+    display: grid;
+    background-image: linear-gradient(to right,grey, beige);       
+    grid-column: 1fr 1fr;
+    grid-row: 1fr 1fr 1fr;
+    color: beige;
+    justify-content: center;
+}
+#cred>#userName{
+    justify-self: right;
+    padding: 5px;
+    margin: 5px;
+    grid-area: 1 / 2 / 2 / 3;
+}
+#cred>#guess{
+    justify-self: right;
+    padding: 5px;
+    margin: 5px;
+    grid-area: 2 / 2 / 3 / 3;
+}
+#cred>#label1{
+    font-style: bold;
+    font-size: 24px;
+    justify-self: left;
+    padding: 5px;
+    margin: 5px;
+    grid-area: 1 / 1 / 2 / 2;
+}
+#cred>#label2{
+    font-style: bold;
+    font-size: 24px;
+    justify-self: left;
+    padding: 5px;
+    margin: 5px;
+    grid-area: 2 / 1 / 3 / 2;
+}
+#cred>button{
+    justify-self: center;
+    margin: 5px;
+    grid-area: 3 / 1 / 3 / 4;
+}
+#action{
+    position: relative;
+}
+#action>*{
+    position: absolute;
+}
+.container>#code{
+    position: absolute;
+    grid-area: "l2";
+
+}
